@@ -1,16 +1,45 @@
-# React + Vite
+# MPS
+Esse projeto consiste no desenvolvimento de um e-commerce para a empresa MPS, com foco em vendas de produtos automotivos.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Backlog
+- [ ] Tela de Home
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+  - [ ] Conexão com o backend
+- [ ] Tela de pesquisa (uma tela padrão que lista todos os itens correspondentes a uma pesquisa)
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+  - [ ] Conexão com o backend
+- [ ] Tela de criar conta
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de login
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de alterar conta
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de carrinho de compra
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de checkout
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de gerenciar endereço
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de criar endereço
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de pedido concluido
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de login de admin
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de dashboard administrativo
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
+- [ ] Tela de gestão de clientes
+  - [ ] Design
+  - [ ] Desenvolvimento da tela em código
