@@ -7,7 +7,7 @@ import Carousel from "../component/carousel/Carousel"
 
 const HomePage = () => {
     return(
-        <div className="grid grid-rows-4 h-full w-auto p-2">
+        <div className="grid grid-rows-[auto_auto_1fr] h-full w-auto p-2 gap-8">
             <header className="flex items-center gap-4 px-4 py-2">
                 <LuAlignJustify className="text-3xl shrink-0 stroke-deep-blue active:stroke-light-blue"/>
                 <div className="flex-1 flex justify-center">
