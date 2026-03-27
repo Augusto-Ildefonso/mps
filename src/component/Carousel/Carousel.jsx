@@ -79,8 +79,10 @@ const Carousel = (props) => {
                         type="button"
                         onClick={() => scrollTo(index)}
                         aria-label={`Ir para slide ${index + 1}`}
-                        className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                            index === selectedIndex ? "bg-deep-blue" : "bg-gray"
+                        className={`rounded-full transition-all duration-300 ${
+                            index === selectedIndex
+                                ? "h-2 w-8 bg-deep-blue"
+                                : "h-2 w-2 bg-gray/60"
                         }`}
                     />
                 ))}
