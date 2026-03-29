@@ -1,8 +1,9 @@
-import { LuAlignJustify, LuHouse, LuPalette, LuSearch, LuShoppingCart, LuSpeaker, LuTruck, LuUser, LuZap } from "react-icons/lu"
+import { LuAlignJustify, LuPalette, LuShoppingCart, LuSpeaker, LuTruck, LuZap } from "react-icons/lu"
 import logo from "../assets/logo.jpeg"
 import motor from "../assets/motor.jpg"
 import Carousel from "../component/carousel/Carousel"
 import ProductCard from "../component/ProductCard/ProductCard"
+import Navbar from "../component/NavBar/NavBar"
 
 
 
@@ -49,12 +50,7 @@ const HomePage = () => {
                 </div>
             </section>
         </div>
-        <nav className="fixed inset-x-0 bottom-0 z-50 h-16 bg-full-white shadow-[0_-4px_14px_rgba(15,23,42,0.12)] flex flex-row justify-around items-center">
-            <LuHouse className="text-4xl shrink-0 stroke-deep-blue active:stroke-light-blue transition duration-300 active:scale-95"/>
-            <LuSearch className="text-4xl shrink-0 stroke-gray active:stroke-light-blue transition duration-300 active:scale-95"/>
-            <LuShoppingCart className="text-4xl shrink-0 stroke-gray active:stroke-light-blue transition duration-300 active:scale-95"/>
-            <LuUser className="text-4xl shrink-0 stroke-gray active:stroke-light-blue transition duration-300 active:scale-95"/>
-        </nav>
+        <Navbar />
         </>
     );
 }
