@@ -13,6 +13,7 @@ export default {
       "red": "#ea4523",
       "gray": "#9fa4b8",
       "white": "#edebeb",
+      "full-white": "#ffffff"
     },
     extend: {
       fontFamily: {
