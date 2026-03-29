@@ -2,15 +2,18 @@
 export default {
   content: [
     "./index.html",
-    ".src/**/*.{js,jsx}"
+    "./src/**/*.{js,jsx}"
   ],
   theme: {
     colors: {
       "orange": "#fe8707",
       "blue": "#0b4f98",
+      "deep-blue": "#15315e",
+      "light-blue": "#265cb4",
       "red": "#ea4523",
       "gray": "#9fa4b8",
       "white": "#edebeb",
+      "full-white": "#ffffff"
     },
     extend: {
       fontFamily: {
