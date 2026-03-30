@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import logo from '../assets/logo.png'
+import logo from '../assets/logo.jpeg'
 import TextField from '../components/auth/TextField'
 import PasswordField from '../components/auth/PasswordField'
-import AuthDivider from '../components/auth/AuthDivider'
 import SocialLoginLink from '../components/auth/SocialLoginLink'
 import SignInButton from '../components/auth/SignInButton'
 import Link from '../components/auth/Link'
@@ -54,7 +53,7 @@ const LoginPage = () => {
             />
 
             <div>
-              <SignInButton text="Sign in" />
+              <SignInButton text="Entrar" />
             </div>
 
             <div className="flex justify-end">
@@ -68,9 +67,12 @@ const LoginPage = () => {
                 </p>
             </div>
 
-            <AuthDivider text="ou" />
-
-            <SocialLoginLink text="Login pelo Google" />
+            <div className="flex items-center px-1">
+              <span className="h-px flex-1 bg-deep-blue" />
+              <span className="px-3 text-sm font-medium text-slate-500">ou</span>
+              <span className="h-px flex-1 bg-deep-blue" />
+            </div>
+            <SocialLoginLink text="Login pelo Google"/>
           </div>
         </form>
       </div>
