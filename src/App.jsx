@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import HomePage from './pages/HomePage'
 import SearchPage from './pages/SearchPage'
+import ProductPage from './pages/ProductPage'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
             <Route path="/search" element={<SearchPage/>}/>
             <Route path="/shoppingcart"/>
             <Route path="/account"/>
+            <Route path="/product" element={<ProductPage />}/>
           </Routes>
       </Router>
     </>
