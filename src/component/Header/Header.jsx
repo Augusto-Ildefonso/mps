@@ -1,7 +1,6 @@
 import { LuAlignJustify, LuShoppingCart } from "react-icons/lu"
 import { useNavigate } from "react-router-dom"
 import logo from "../../assets/logo.jpeg"
-import ShoppingCartPage from "../../pages/ShoppingCartPage"
 
 const Header = () => {
     const navigate = useNavigate()
