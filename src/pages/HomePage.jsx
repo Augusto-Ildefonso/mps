@@ -1,9 +1,10 @@
 import { LuAlignJustify, LuPalette, LuShoppingCart, LuSpeaker, LuTruck, LuZap } from "react-icons/lu"
 import motor from "../assets/motor.jpg"
-import Carousel from "../component/carousel/Carousel"
+import Carousel from "../component/Carousel/Carousel"
 import ProductCard from "../component/ProductCard/ProductCard"
 import Navbar from "../component/NavBar/NavBar"
 import Header from "../component/Header/Header"
+
 
 
 

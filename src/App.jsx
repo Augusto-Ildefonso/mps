@@ -1,11 +1,9 @@
-import { useState } from 'react'
 import './App.css'
 import HomePage from './pages/HomePage'
 import SearchPage from './pages/SearchPage'
 import ProductPage from './pages/ProductPage'
 import ShoppingCartPage from './pages/ShoppingCartPage'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-
 function App() {
   return (
     <>
