@@ -1,13 +1,39 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import motor from "../assets/motor.jpg"
 import NavBar from "../component/NavBar/NavBar"
 import ProductShoppingCartCard from "../component/ProductShoppingCartCard/ProductShoppingCartCard"
 import mockReq from "../mock"
+import { cart } from "../services/Cart"
 
 const ShoppingCartPage = () => {
-    const [cartItems, setCartItems] = useState(mockReq)
+    const [cartItems, setCartItems] = useState([])
     const navigate = useNavigate()
+
+    const syncCartItems = useCallback(() => {
+        const productsById = new Map(mockReq.map((product) => [product.id, product]))
+
+        const syncedItems = cart
+            .getItems()
+            .map((cartItem) => {
+                const product = productsById.get(cartItem.id)
+
+                if (!product) {
+                    return null
+                }
+
+                return {
+                    ...product,
+                    number: cartItem.number,
+                }
+            })
+            .filter(Boolean)
+
+        setCartItems(syncedItems)
+    }, [])
+
+    useEffect(() => {
+        syncCartItems()
+    }, [syncCartItems])
 
     const handleCheckout = () => {
         // Lógica do checkout
@@ -15,25 +41,13 @@ const ShoppingCartPage = () => {
     }
 
     const handleIncreaseProduct = (productId) => {
-        setCartItems((currentItems) =>
-            currentItems.map((item) =>
-                item.id === productId
-                    ? { ...item, number: item.number + 1 }
-                    : item
-            )
-        )
+        cart.addItem(productId)
+        syncCartItems()
     }
 
     const handleDecreaseProduct = (productId) => {
-        setCartItems((currentItems) =>
-            currentItems
-                .map((item) =>
-                    item.id === productId
-                        ? { ...item, number: item.number - 1 }
-                        : item
-                )
-                .filter((item) => item.number > 0)
-        )
+        cart.decreaseItem(productId)
+        syncCartItems()
     }
 
     return(
