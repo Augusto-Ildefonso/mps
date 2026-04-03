@@ -1,6 +1,10 @@
 import { cart } from "../../services/Cart"
 const CardButton = (props) => {
     const handleClick = (id) => {
+        if (id == null) {
+            return
+        }
+
         cart.addItem(id)
         alert("Adicionado com sucesso")
     }
@@ -8,7 +12,7 @@ const CardButton = (props) => {
     return(
         <button 
             className={`w-3/6 h-8 rounded-3xl bg-dark-blue text-full-white font-bold text-xs flex justify-center items-center active:bg-light-blue active:scale-95 duration-100 ${props.className ?? ""}`}
-            onClick={() => {handleClick(props.productId)}}
+                onClick={() => {handleClick(props.productId ?? props.id)}}
         >
                 <p>Adicionar ao carrinho</p>
         </button>

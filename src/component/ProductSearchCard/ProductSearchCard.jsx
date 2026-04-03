@@ -1,5 +1,5 @@
-import CardButton from "../CardButton/CardButton"
 import { useNavigate } from "react-router-dom"
+import CardButton from "../CardButton/CardButton"
 
 const ProductSearchCard = (props) => {
     const navigate = useNavigate()
@@ -22,7 +22,7 @@ const ProductSearchCard = (props) => {
                     <p className="font-bold">{props.price}</p>
                 </div>
             </div>
-            <CardButton className="self-center"/>
+            <CardButton className="self-center" productId={props.id}/>
         </div>
     )
 }
