@@ -2,6 +2,7 @@ import './App.css'
 import HomePage from './pages/HomePage'
 import SearchPage from './pages/SearchPage'
 import ProductPage from './pages/ProductPage'
+import AccountPage from './pages/AccountPage'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
             <Route path="/" element={<HomePage/>}/>
             <Route path="/search" element={<SearchPage/>}/>
             <Route path="/shoppingcart"/>
-            <Route path="/account"/>
+            <Route path="/account" element={<AccountPage />}/>
             <Route path="/product" element={<ProductPage />}/>
           </Routes>
       </Router>
