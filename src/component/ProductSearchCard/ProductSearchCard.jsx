@@ -11,10 +11,8 @@ const ProductSearchCard = (props) => {
 
     return(
         <div 
-        className="w- h-25 flex flex-row justify-start shadow-[0_-1px_4px_rgba(15,23,42,0.04),0_4px_10px_rgba(15,23,42,0.06)] rounded-xl p-3"
-        onClick={() => handleCardClick()}
-        >
-            <div className="flex flex-row w-full mt-5">
+        className="w- h-25 flex flex-row justify-start shadow-[0_-1px_4px_rgba(15,23,42,0.04),0_4px_10px_rgba(15,23,42,0.06)] rounded-xl p-3">
+            <div className="flex flex-row w-full mt-5" onClick={() => handleCardClick()}>
                 <div className="w-2/5 flex justify-center items-center">
                     <img src={props.imageUrl} alt={props.imageAlt} className="w-auto object-contain"/>
                 </div>

@@ -1,6 +1,8 @@
+import { cart } from "../../services/Cart"
 const CardButton = (props) => {
     const handleClick = (id) => {
-        // Lógica de adicionar ao carrinho
+        cart.addItem(id)
+        alert("Adicionado com sucesso")
     }
 
     return(
