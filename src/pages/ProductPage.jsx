@@ -6,6 +6,7 @@ import motor from "../assets/motor.jpg"
 
 // Forçando construir com um product mock mas na realidade faria a busca pelos dados no servidor
 const mockProduct = {
+    "id": 1,
     "name": "Motor Turbo v8 1.5",
     "brand": "Corolla",
     "description": "Um motor turbo v8 de 1.5L que faz de 0 a 100 em 20 segundos. Compátivel com carros da corolla a partir de 2010.",
@@ -56,7 +57,7 @@ const ProductPage = (props) => {
                 </div>
                 <div className="flex flex-col justify-around gap-3 mt-5">
                     <h2 className="text-4xl font-bold">Por: R${mockProduct.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h2>
-                    <CardButton className="self-center"/>
+                    <CardButton className="self-center" productId={mockProduct.id}/>
                 </div>
                 <div className="mt-5 rounded-xl shadow-[0_-1px_4px_rgba(15,23,42,0.04),0_4px_10px_rgba(15,23,42,0.06)] p-3">
                     <h2 className="font-bold text-xl">Marca</h2>

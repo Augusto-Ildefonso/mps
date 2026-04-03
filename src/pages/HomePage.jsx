@@ -1,10 +1,10 @@
-import { LuAlignJustify, LuPalette, LuShoppingCart, LuSpeaker, LuTruck, LuZap } from "react-icons/lu"
+import { LuPalette, LuSpeaker, LuTruck, LuZap } from "react-icons/lu"
 import motor from "../assets/motor.jpg"
 import Carousel from "../component/Carousel/Carousel"
-import ProductCard from "../component/ProductCard/ProductCard"
-import Navbar from "../component/NavBar/NavBar"
 import Header from "../component/Header/Header"
-
+import Navbar from "../component/NavBar/NavBar"
+import ProductCard from "../component/ProductCard/ProductCard"
+import mockReq from "../mock"
 
 
 
@@ -38,10 +38,18 @@ const HomePage = () => {
             <section className="flex flex-col items-center">
                 <h1 className="font-extrabold text-3xl">Produtos em Destaque</h1>
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                    <ProductCard productName="Motor V8" price="R$2000,00" productImage={motor}/>
-                    <ProductCard productName="Motor V8" price="R$2000,00" productImage={motor}/>
-                    <ProductCard productName="Motor V8" price="R$2000,00" productImage={motor}/>
-                    <ProductCard productName="Motor V8" price="R$2000,00" productImage={motor}/>
+                    {
+                        mockReq.map(element => (
+                            <ProductCard
+                                    key={element.id}
+                                id={element.id}
+                                productName={element.name}
+                                price={`R$ ${element.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                                    productImage={element.url}
+                                imageAlt={element.alt}
+                            />
+                        ))
+                    }
                 </div>
             </section>
         </div>

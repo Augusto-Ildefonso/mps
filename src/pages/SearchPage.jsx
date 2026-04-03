@@ -3,65 +3,7 @@ import motor from "../assets/motor.jpg"
 import NavBar from "../component/NavBar/NavBar"
 import ProductSearchCard from "../component/ProductSearchCard/ProductSearchCard"
 import SearchBar from "../component/SearchBar/SearchBar"
-
-const mockReq = [
-    {
-        "id": 1,
-        "name": "Motor",
-        "price": 2000.0,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 2,
-        "name": "Motor",
-        "price": 5000.0,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 3,
-        "name": "Motor",
-        "price": 100.0,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 4,
-        "name": "Motor",
-        "price": 404.0,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 5,
-        "name": "Motor",
-        "price": 599.99,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 6,
-        "name": "Motor",
-        "price": 10.0,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 7,
-        "name": "Motor",
-        "price": 599.99,
-        "url": motor,
-        "alt": "motor"
-    },
-    {
-        "id": 8,
-        "name": "Motor",
-        "price": 10.0,
-        "url": motor,
-        "alt": "motor"
-    },
-]
+import mockReq from "../mock"
 
 const SearchPage = () => {
     const [isNavVisible, setIsNavVisible] = useState(true)
@@ -105,6 +47,7 @@ const SearchPage = () => {
                     {
                         mockReq.map(element => (
                             <ProductSearchCard
+                                key={element.id}
                                 id={element.id}
                                 productName={element.name}
                                 price={`R$ ${element.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
