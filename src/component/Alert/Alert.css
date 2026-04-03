@@ -1,0 +1,31 @@
+@keyframes alertProgress {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}
+
+@keyframes alertEnter {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-enter {
+    animation: alertEnter 220ms ease-out;
+}
+
+.alert-progress {
+    animation-name: alertProgress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
