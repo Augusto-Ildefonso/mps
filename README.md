@@ -2,19 +2,19 @@
 Esse projeto consiste no desenvolvimento de um e-commerce para a empresa MPS, com foco em vendas de produtos automotivos.
 
 # Backlog
-- [ ] Tela de Home
-  - [ ] Design
-  - [ ] Desenvolvimento da tela em código
+- [x] Tela de Home
+  - [x] Design
+  - [x] Desenvolvimento da tela em código
   - [ ] Conexão com o backend
-- [ ] Tela de pesquisa (uma tela padrão que lista todos os itens correspondentes a uma pesquisa)
-  - [ ] Design
-  - [ ] Desenvolvimento da tela em código
+- [x] Tela de pesquisa (uma tela padrão que lista todos os itens correspondentes a uma pesquisa)
+  - [x] Design
+  - [x] Desenvolvimento da tela em código
   - [ ] Conexão com o backend
 - [ ] Tela de criar conta
   - [ ] Design
   - [ ] Desenvolvimento da tela em código
-- [ ] Tela de login
-  - [ ] Design
+- [x] Tela de login
+  - [x] Design
   - [ ] Desenvolvimento da tela em código
 - [ ] Tela de alterar conta
   - [ ] Design
@@ -22,6 +22,10 @@ Esse projeto consiste no desenvolvimento de um e-commerce para a empresa MPS, co
 - [ ] Tela de carrinho de compra
   - [ ] Design
   - [ ] Desenvolvimento da tela em código
+- [x] Tela do produto
+  - [x] Design
+  - [ ] Desenvolvimento em código
+  - [ ] Conexão com backend
 - [ ] Tela de checkout
   - [ ] Design
   - [ ] Desenvolvimento da tela em código
