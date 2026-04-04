@@ -3,7 +3,7 @@ import motor from "../assets/motor.jpg"
 import NavBar from "../component/NavBar/NavBar"
 import ProductSearchCard from "../component/ProductSearchCard/ProductSearchCard"
 import SearchBar from "../component/SearchBar/SearchBar"
-import mockReq from "../mock"
+import {mockReq} from "../mock"
 
 const SearchPage = () => {
     const [isNavVisible, setIsNavVisible] = useState(true)

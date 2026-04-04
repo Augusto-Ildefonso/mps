@@ -4,7 +4,7 @@ import Carousel from "../component/Carousel/Carousel"
 import Header from "../component/Header/Header"
 import Navbar from "../component/NavBar/NavBar"
 import ProductCard from "../component/ProductCard/ProductCard"
-import mockReq from "../mock"
+import { mockReq } from "../mock"
 
 
 

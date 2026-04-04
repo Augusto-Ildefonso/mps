@@ -18,7 +18,7 @@ export default {
       "white": "#edebeb",
       "full-white": "#ffffff",
       "green": "#30a634",
-      "yellow": "#f9f92e",
+      "yellow": "#e5e503",
     },
     extend: {
       fontFamily: {
