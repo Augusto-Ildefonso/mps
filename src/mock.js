@@ -120,3 +120,23 @@ export const mockOrders = [
 
 ]
 
+export const mockAddress = [
+    {
+        "id": 1,
+        "name": "Casa",
+        "street": "Rua das Flores",
+        "number": "123",
+        "city": "São Paulo",
+        "state": "SP",
+        "cep": "12345-678"
+    },
+    {
+        "id": 2,
+        "name": "Trabalho",
+        "street": "Avenida Paulista",
+        "number": "456",
+        "city": "São Paulo",
+        "state": "SP",
+        "cep": "87654-321"
+    }
+]

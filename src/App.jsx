@@ -5,6 +5,8 @@ import ProductPage from './pages/ProductPage'
 import AccountPage from './pages/AccountPage'
 import ShoppingCartPage from './pages/ShoppingCartPage'
 import Orders from './pages/account/Orders'
+import AddressPage from './pages/account/AdressesPage'
+import {AddressEditPage} from './pages/account/AddressEditPage'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="/account" element={<AccountPage />}/>
             <Route path="/shoppingcart" element={<ShoppingCartPage/>}/>
             <Route path="/account/orders" element={<Orders />}/>
+            <Route path="/account/addresses" element={<AddressPage />}/>
+            <Route path="/account/addresses/edit" element={<AddressEditPage />}/>
             <Route path="/product" element={<ProductPage />}/>
           </Routes>
       </Router>
