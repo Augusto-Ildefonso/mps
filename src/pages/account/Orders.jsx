@@ -2,6 +2,7 @@ import OrderBlock from "../../component/Orders/OrderBlock";
 import { useNavigate } from "react-router-dom";
 import { mockOrders } from "../../mock";
 import Header from "../../component/Header/Header";
+import NavBar from "../../component/NavBar/NavBar";
 
 const Orders = ({orders}) => {
     const navigate  = useNavigate();
@@ -15,6 +16,7 @@ const Orders = ({orders}) => {
                 <OrderBlock key={order.orderId} OrderInfo={order}/>
             ))}
         </div>
+        <NavBar />
     </div>
   );
 }

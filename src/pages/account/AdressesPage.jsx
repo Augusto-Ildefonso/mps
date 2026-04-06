@@ -1,6 +1,7 @@
 import AddressCard from "../../component/Address/AdressCard";
 import Header from "../../component/Header/Header";
 import { mockAddress } from "../../mock";
+import NavBar from "../../component/NavBar/NavBar";
 const AddressPage = ({addresses}) => {
 
     return (
@@ -12,6 +13,7 @@ const AddressPage = ({addresses}) => {
                 <AddressCard address={address} />
             ))}
             </div>
+            <NavBar />
         </div>
     )
 }

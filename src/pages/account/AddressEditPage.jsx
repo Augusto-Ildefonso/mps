@@ -2,6 +2,7 @@ import TextField from "../../component/Auth/TextField";
 import DropDown from "../../component/Forms/Dropdown";
 import Header from "../../component/Header/Header";
 import { useState } from "react";
+import NavBar from "../../component/NavBar/NavBar";
 const AddressEditPage = () => {
     const Estados = [
         "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
@@ -117,6 +118,7 @@ const AddressEditPage = () => {
                 <TextField id="Complemento" name="Complemento" label="Complemento" placeholder="Apartamento, casa, etc." value={complemento} onChange={(e) => setComplemento(e.target.value)} />
                 <button type="submit" className="bg-orange rounded-md h-16 text-xl text-bold">Salvar</button>
             </form>
+            <NavBar />
         </div>
     )
 }
