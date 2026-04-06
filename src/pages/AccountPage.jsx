@@ -1,7 +1,8 @@
-import { LuUser, LuPackage, LuMapPin, LuCreditCard, LuSettings, LuHeart, LuMessageSquare, LuBell, LuCircleHelp, LuLogOut } from "react-icons/lu"
+import {  LuPackage, LuMapPin, LuCreditCard, LuSettings, LuHeart, LuMessageSquare, LuBell, LuCircleHelp, LuLogOut } from "react-icons/lu"
 import Header from "../component/Header/Header"
 import Navbar from "../component/NavBar/NavBar"
 import AccountMenuItem from "../component/AccountMenuItem/AccountMenuItem"
+import { useNavigate } from "react-router-dom"
 
 const mockUser = {
     name: "Marco Silva",
@@ -10,8 +11,18 @@ const mockUser = {
 }
 
 const AccountPage = () => {
+    const navigate = useNavigate();
     const handleNavigation = (section) => {
-        console.log(`Navigating to: ${section}`)
+        const routes = {
+            "pedidos": "/account/orders",
+            "endereços": "/account/addresses",
+            "pagamentos": "/account/payments",
+            "configurações": "/account/settings",
+            "notificações": "/account/notifications",
+            "ajuda": "/account/help",
+            "logout": "/logout"
+        };
+        navigate(routes[section] || "/account");
     }
 
     return (

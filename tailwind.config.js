@@ -16,7 +16,9 @@ export default {
       "light-gray": "#f2f6f7",
       "dark-gray": "#636564",
       "white": "#edebeb",
-      "full-white": "#ffffff"
+      "full-white": "#ffffff",
+      "green": "#30a634",
+      "yellow": "#e5e503",
     },
     extend: {
       fontFamily: {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import NavBar from "../component/NavBar/NavBar"
 import ProductShoppingCartCard from "../component/ProductShoppingCartCard/ProductShoppingCartCard"
-import mockReq from "../mock"
+import {mockReq} from "../mock"
 import { cart } from "../services/Cart"
 
 const ShoppingCartPage = () => {
