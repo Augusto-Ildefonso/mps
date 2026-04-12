@@ -3,26 +3,29 @@ import CardButton from "../CardButton/CardButton"
 
 const ProductSearchCard = (props) => {
     const navigate = useNavigate()
-    
+
     const handleCardClick = (productId) => {
         navigate("/product")
         //navigate(`/product/?${productId}`)
     }
 
     return(
-        <div 
-        className="w- h-25 flex flex-row justify-start shadow-[0_-1px_4px_rgba(15,23,42,0.04),0_4px_10px_rgba(15,23,42,0.06)] rounded-xl p-3">
-            <div className="flex flex-row w-full mt-5" onClick={() => handleCardClick()}>
-                <div className="w-2/5 flex justify-center items-center">
-                    <img src={props.imageUrl} alt={props.imageAlt} className="w-auto object-contain"/>
-                </div>
+        <div
+        className="w-full h-auto flex flex-col md:flex-row justify-start shadow-[0_-1px_4px_rgba(15,23,42,0.04),0_4px_10px_rgba(15,23,42,0.06)] rounded-xl p-3 gap-3 md:gap-4">
+            <div className="w-full md:w-2/5 flex justify-center items-center bg-light-gray rounded-md p-4" onClick={() => handleCardClick()}>
+                <img src={props.imageUrl} alt={props.imageAlt} className="w-full max-w-[200px] h-auto object-contain"/>
+            </div>
 
-                <div className="w-3/5 ml-5">
-                    <h1 className="font-extrabold">{props.productName}</h1>
-                    <p className="font-bold">{props.price}</p>
+            {/* Product info section - horizontal on small screens, vertical on large */}
+            <div className="flex flex-col flex-1 gap-2">
+                <div className="flex flex-row md:flex-col justify-between items-start md:items-start w-full gap-2">
+                    <div className="flex-1" onClick={() => handleCardClick()}>
+                        <h1 className="font-extrabold text-base md:text-md">{props.productName}</h1>
+                        <p className="font-bold text-base md:text-md text-deep-blue mt-1">{props.price}</p>
+                    </div>
+                    <CardButton className="self-center md:self-auto" productId={props.id}/>
                 </div>
             </div>
-            <CardButton className="self-center" productId={props.id}/>
         </div>
     )
 }

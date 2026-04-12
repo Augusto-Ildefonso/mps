@@ -3,6 +3,7 @@ import Header from "../component/Header/Header"
 import Navbar from "../component/NavBar/NavBar"
 import AccountMenuItem from "../component/AccountMenuItem/AccountMenuItem"
 import { useNavigate } from "react-router-dom"
+import BannerNav from "../component/NavBar/BannerNav"
 
 const mockUser = {
     name: "Marco Silva",
@@ -28,7 +29,7 @@ const AccountPage = () => {
     return (
         <div className="grid grid-rows min-h-screen w-auto p-2 gap-4 pb-20">
             <Header />
-            
+            <BannerNav />
             <section className="flex flex-col gap-4 px-4">
                 {/* Seção do perfil */}
                 <div className="flex flex-row items-center gap-4 bg-full-white rounded-xl p-4">

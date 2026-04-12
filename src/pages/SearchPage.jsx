@@ -1,12 +1,12 @@
-import { useRef, useState } from "react"
-import motor from "../assets/motor.jpg"
+import { useRef} from "react"
 import NavBar from "../component/NavBar/NavBar"
 import ProductSearchCard from "../component/ProductSearchCard/ProductSearchCard"
 import SearchBar from "../component/SearchBar/SearchBar"
 import {mockReq} from "../mock"
+import Header from "../component/Header/Header"
+import BannerNav from "../component/NavBar/BannerNav"
 
 const SearchPage = () => {
-    const [isNavVisible, setIsNavVisible] = useState(true)
     const lastScrollTopRef = useRef(0)
     const SCROLL_THRESHOLD = 12
 
@@ -42,8 +42,10 @@ const SearchPage = () => {
     return(
         <>
             <div className="p-5 h-[100dvh] flex flex-col overflow-hidden w-full">
+                <Header />
+                <BannerNav />
                 <SearchBar/>
-                <div className="flex flex-col gap-5 p-2 w-full mt-4 flex-1 overflow-y-auto pb-20" onScroll={handleListScroll}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2 w-full mt-4 flex-1 overflow-y-auto pb-20" onScroll={handleListScroll}>
                     {
                         mockReq.map(element => (
                             <ProductSearchCard
@@ -57,9 +59,9 @@ const SearchPage = () => {
                         ))
                     }
                 </div>
-                
+
             </div>
-            <NavBar isVisible={isNavVisible}/>
+            <NavBar/>
         </>
     )
 }
