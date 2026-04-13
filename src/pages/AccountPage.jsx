@@ -1,9 +1,18 @@
-import {  LuPackage, LuMapPin, LuCreditCard, LuSettings, LuHeart, LuMessageSquare, LuBell, LuCircleHelp, LuLogOut } from "react-icons/lu"
+import { useState } from "react"
 import Header from "../component/Header/Header"
 import Navbar from "../component/NavBar/NavBar"
-import AccountMenuItem from "../component/AccountMenuItem/AccountMenuItem"
-import { useNavigate } from "react-router-dom"
 import BannerNav from "../component/NavBar/BannerNav"
+import AccountSidebar from "../component/AccountSidebar/AccountSidebar"
+import { useNavigate } from "react-router-dom"
+import {
+    AccountOverviewPanel,
+    AccountOrdersPanel,
+    AccountAddressesPanel,
+    AccountPaymentsPanel,
+    AccountSettingsPanel,
+    AccountNotificationsPanel,
+    AccountHelpPanel
+} from "../component/AccountPanels"
 
 const mockUser = {
     name: "Marco Silva",
@@ -12,101 +21,90 @@ const mockUser = {
 }
 
 const AccountPage = () => {
-    const navigate = useNavigate();
-    const handleNavigation = (section) => {
-        const routes = {
-            "pedidos": "/account/orders",
-            "endereços": "/account/addresses",
-            "pagamentos": "/account/payments",
-            "configurações": "/account/settings",
-            "notificações": "/account/notifications",
-            "ajuda": "/account/help",
-            "logout": "/logout"
-        };
-        navigate(routes[section] || "/account");
+    
+    const [activeSection, setActiveSection] = useState("visao-geral")
+
+    const handleLogout = () => {
+        console.log("Logout clicked")
+    }
+
+    const renderPanel = () => {
+        switch (activeSection) {
+            case "visao-geral":
+                return <AccountOverviewPanel userName={mockUser.name} userEmail={mockUser.email} userAvatar={mockUser.avatar} />
+            case "pedidos":
+                return <AccountOrdersPanel />
+            case "enderecos":
+                return <AccountAddressesPanel />
+            case "pagamentos":
+                return <AccountPaymentsPanel />
+            case "configuracoes":
+                return <AccountSettingsPanel />
+            case "notificacoes":
+                return <AccountNotificationsPanel />
+            case "ajuda":
+                return <AccountHelpPanel />
+            default:
+                return <AccountOverviewPanel userName={mockUser.name} userEmail={mockUser.email} userAvatar={mockUser.avatar} />
+        }
     }
 
     return (
-        <div className="grid grid-rows min-h-screen w-auto p-2 gap-4 pb-20">
+        <div className="min-h-screen flex flex-col">
             <Header />
             <BannerNav />
-            <section className="flex flex-col gap-4 px-4">
-                {/* Seção do perfil */}
-                <div className="flex flex-row items-center gap-4 bg-full-white rounded-xl p-4">
-                    <div className="flex justify-center items-center w-16 h-16 rounded-full bg-dark-blue text-full-white text-3xl font-bold">
-                        {mockUser.avatar ? (
-                            <img src={mockUser.avatar} alt="User Avatar" className="w-full h-full rounded-full object-cover" />
-                        ) : (
-                            <span>{mockUser.name.charAt(0).toUpperCase()}</span>
-                        )}
+            
+            <div className="flex-1 px-2 md:px-4 pb-20">
+                <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-4 mt-4 max-w-7xl mx-auto">
+                    {/* Barra lateral */}
+                    <div className="order-2 md:order-1">
+                        {/* Perfil - Visivel apenas no Mobile */}
+                        <div className="md:hidden flex flex-row items-center gap-4 bg-full-white rounded-xl p-4 mb-4">
+                            <div className="flex justify-center items-center w-16 h-16 rounded-full bg-dark-blue text-full-white text-3xl font-bold">
+                                {mockUser.avatar ? (
+                                    <img src={mockUser.avatar} alt="User Avatar" className="w-full h-full rounded-full object-cover" />
+                                ) : (
+                                    <span>{mockUser.name.charAt(0).toUpperCase()}</span>
+                                )}
+                            </div>
+                            <div className="flex flex-col">
+                                <h1 className="font-extrabold text-xl text-deep-blue">{mockUser.name}</h1>
+                                <p className="text-sm text-gray">{mockUser.email}</p>
+                            </div>
+                        </div>
+
+                        {/* Perfil - Visivel apenas no Desktop */}
+                        <div className="hidden md:flex flex-col items-center gap-3 bg-full-white rounded-xl p-6 mb-4">
+                            <div className="flex justify-center items-center w-20 h-20 rounded-full bg-dark-blue text-full-white text-4xl font-bold">
+                                {mockUser.avatar ? (
+                                    <img src={mockUser.avatar} alt="User Avatar" className="w-full h-full rounded-full object-cover" />
+                                ) : (
+                                    <span>{mockUser.name.charAt(0).toUpperCase()}</span>
+                                )}
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <h1 className="font-extrabold text-lg text-deep-blue">{mockUser.name}</h1>
+                                <p className="text-sm text-gray">{mockUser.email}</p>
+                            </div>
+                        </div>
+
+                        {/* Barra de navegação */}
+                        <AccountSidebar 
+                            activeSection={activeSection} 
+                            onSectionChange={setActiveSection}
+                            onLogout={handleLogout}
+                        />
                     </div>
-                    <div className="flex flex-col">
-                        <h1 className="font-extrabold text-xl text-deep-blue">{mockUser.name}</h1>
-                        <p className="text-sm text-gray">{mockUser.email}</p>
+
+                    {/* Paineis */}
+                    <div className="order-1 md:order-2">
+                        <div className="hidden md:block">
+                            {renderPanel()}
+                        </div>
                     </div>
                 </div>
-
-                {/* Pedidos feitos*/}
-                <div className="flex flex-col gap-3">
-                    <h2 className="font-bold text-lg text-deep-blue">Pedidos</h2>
-                    <AccountMenuItem 
-                        icon={LuPackage} 
-                        label="Meus Pedidos" 
-                        description="Acompanhe seus pedidos"
-                        onClick={() => handleNavigation("pedidos")}
-                    />
-                </div>
-
-                {/* Endereços */}
-                <div className="flex flex-col gap-3">
-                    <h2 className="font-bold text-lg text-deep-blue">Conta</h2>
-                    <AccountMenuItem 
-                        icon={LuMapPin} 
-                        label="Endereços" 
-                        description="Gerencie seus endereços"
-                        onClick={() => handleNavigation("endereços")}
-                    />
-                    {/* Pagamentos */}
-                    <AccountMenuItem 
-                        icon={LuCreditCard} 
-                        label="Pagamentos" 
-                        description="Formas de pagamento"
-                        onClick={() => handleNavigation("pagamentos")}
-                    />
-                </div>
-
-                {/* Configurações */}
-                <div className="flex flex-col gap-3">
-                    <h2 className="font-bold text-lg text-deep-blue">Configurações e Suporte</h2>
-                    <AccountMenuItem 
-                        icon={LuSettings} 
-                        label="Configurações" 
-                        onClick={() => handleNavigation("configurações")}
-                    />
-                    {/* Notificações */}
-                    <AccountMenuItem 
-                        icon={LuBell} 
-                        label="Notificações" 
-                        onClick={() => handleNavigation("notificações")}
-                    />
-                    {/* Ajuda */}
-                    <AccountMenuItem 
-                        icon={LuCircleHelp} 
-                        label="Ajuda" 
-                        onClick={() => handleNavigation("ajuda")}
-                    />
-                </div>
-
-                {/* Sair. Mas por que? :< */}
-                <button
-                    type="button"
-                    onClick={() => handleNavigation("logout")}
-                    className="w-full flex flex-row items-center justify-center gap-2 p-4 bg-red text-full-white rounded-xl font-bold active:scale-[0.98] transition duration-300 mt-4"
-                >
-                    <LuLogOut className="text-2xl" />
-                    <span>Sair da Conta</span>
-                </button>
-            </section>
+            </div>
+            
             <Navbar />
         </div>
     )
