@@ -1,17 +1,20 @@
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import './App.css'
-import HomePage from './pages/HomePage'
-import SearchPage from './pages/SearchPage'
-import ProductPage from './pages/ProductPage'
 import AccountPage from './pages/AccountPage'
+import HomePage from './pages/HomePage'
+import ProductPage from './pages/ProductPage'
+import SearchPage from './pages/SearchPage'
 import ShoppingCartPage from './pages/ShoppingCartPage'
-import Orders from './pages/account/Orders'
-import AddressPage from './pages/account/AddressesPage'
+import AddressNewPage from './pages/account/AddresNewPage'
 import AddressEditPage from './pages/account/AddressEditPage'
-import SettingsPage from './pages/account/Settings'
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-import  AddressNewPage  from './pages/account/AddresNewPage'
-import NotificationsPage from './pages/account/NotificationsPage'
+import AddressPage from './pages/account/AddressesPage'
 import HelpPage from './pages/account/HelpPage'
+import NotificationsPage from './pages/account/NotificationsPage'
+import Orders from './pages/account/Orders'
+import SettingsPage from './pages/account/Settings'
+import CheckoutAddressPage from './pages/checkout/CheckoutAddressPage'
+import CheckoutPaymentPage from './pages/checkout/CheckoutPaymentPage'
+import CheckoutReviewPage from './pages/checkout/CheckoutReviewPage'
 function App() {
   return (
     <>
@@ -29,6 +32,9 @@ function App() {
             <Route path="/account/addresses/edit" element={<AddressEditPage />}/>
             <Route path="/account/addresses/new" element={<AddressNewPage />}/>
             <Route path="/product" element={<ProductPage />}/>
+            <Route path="/checkout/address" element={<CheckoutAddressPage />}/>
+            <Route path="/checkout/payment" element={<CheckoutPaymentPage />}/>
+            <Route path="/checkout/review" element={<CheckoutReviewPage />}/>
           </Routes>
       </Router>
     </>
