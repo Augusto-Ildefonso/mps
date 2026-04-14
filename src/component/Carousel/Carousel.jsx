@@ -61,7 +61,7 @@ const Carousel = (props) => {
     }, [emblaApi, onInit, onSelect]);
 
     return(
-        <div className="embla w-full">
+        <div className="w-[95%] sm:w-[85%] md:w-[90%] lg:w-[95%] xl:w-[90%] 2xl:w-[85%] h-full mx-auto">
             <div className="embla__viewport" ref={emblaRef}>
                 <div className="embla__container">
                     {images.map((imageUrl, index) => (

@@ -23,15 +23,15 @@ const ProductCard = (props) => {
     }
 
     return(
-        <div className="flex flex-col w-40 h-auto shadow-xl rounded-xl p-4 gap-y-1"
+        <div className="flex flex-col w-full h-auto shadow-xl rounded-xl p-2 sm:p-3 gap-y-1"
         >
-            <div className="w-7/8 flex-1 flex justify-center items-center"  onClick={() => handleCardClick()}>
-                <img src={props.productImage} alt={props.imageAlt} className="w-auto object-contain"/>
+            <div className="w-full flex-1 flex justify-center items-center"  onClick={() => handleCardClick()}>
+                <img src={props.productImage} alt={props.imageAlt} className="w-full max-w-[150px] sm:max-w-[180px] h-auto object-contain"/>
             </div>
-            <p className="font-extrabold text-lg text-deep-blue"  onClick={() => handleCardClick()}>{props.productName}</p>
+            <p className="font-extrabold text-base sm:text-lg text-deep-blue truncate"  onClick={() => handleCardClick()}>{props.productName}</p>
             <div className="flex flex-row justify-between items-center">
-                <p className="font-bold"  onClick={() => handleCardClick()}>{props.price}</p>
-                <FaCartPlus className="text-2xl shrink-0 stroke-deep-blue active:text-light-blue" onClick={(event) => handleCartButton(event, props.id)}/>
+                <p className="font-bold text-sm sm:text-base"  onClick={() => handleCardClick()}>{props.price}</p>
+                <FaCartPlus className="text-xl sm:text-2xl shrink-0 stroke-deep-blue active:text-light-blue" onClick={(event) => handleCartButton(event, props.id)}/>
             </div>
             <Alert
                 isVisible={isAlertVisible}

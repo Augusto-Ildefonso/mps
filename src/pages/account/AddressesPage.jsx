@@ -1,4 +1,4 @@
-import AddressCard from "../../component/Address/AdressCard";
+import AddressCard from "../../component/Address/AddressCard";
 import { LuPlus } from "react-icons/lu";
 import Header from "../../component/Header/Header";
 import { mockAddress } from "../../mock";

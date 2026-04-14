@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom"
 import CardButton from "../component/CardButton/CardButton"
 import logo from "../assets/logo.jpeg"
 import motor from "../assets/motor.jpg"
-
+import BannerNav from "../component/NavBar/BannerNav"
+import Navbar from "../component/NavBar/NavBar"
 // Forçando construir com um product mock mas na realidade faria a busca pelos dados no servidor
 const mockProduct = {
     "id": 1,
@@ -29,6 +30,7 @@ const ProductPage = (props) => {
 
     return(
         <div className="flex flex-col justify-center">
+            
             <header className="grid grid-cols-3 items-center px-4 py-2">
                 <button
                     type="button"
@@ -49,7 +51,7 @@ const ProductPage = (props) => {
                     <LuShoppingCart className="shrink-0 stroke-current active:text-light-blue transition duration-300 active:scale-95" />
                 </button>
             </header>
-
+            <BannerNav />
             <section className="flex flex-col p-5">
                 <h1 className="text-3xl font-extrabold ">{mockProduct.name}</h1>
                 <div className="w-full h-full bg-light-gray p-5 rounded mt-3">
@@ -67,6 +69,7 @@ const ProductPage = (props) => {
                 </div>
 
             </section>
+            <Navbar />
         </div>
     )
 }
