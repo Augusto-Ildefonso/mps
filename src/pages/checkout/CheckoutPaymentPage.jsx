@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import { LuCreditCard, LuLockKeyhole } from "react-icons/lu"
 import { SiAmericanexpress, SiDiscover, SiMastercard, SiVisa } from "react-icons/si"
 import { useLocation, useNavigate } from "react-router-dom"
-import TextField from "../../component/Auth/TextField"
+import TextField from "../../component/auth/TextField"
 import Button from "../../component/GeneralButton/Button"
 import Header from "../../component/Header/Header"
 

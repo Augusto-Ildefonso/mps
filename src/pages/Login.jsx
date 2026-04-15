@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import logo from '../assets/logo.jpeg'
-import TextField from '../components/auth/TextField'
-import PasswordField from '../components/auth/PasswordField'
-import SocialLoginLink from '../components/auth/SocialLoginLink'
-import SignInButton from '../components/auth/SignInButton'
-import Link from '../components/auth/Link'
-
+import TextField from '../component/auth/TextField'
+import PasswordField from '../component/auth/PasswordField'
+import SocialLoginLink from '../component/auth/SocialLoginLink'
+import SignInButton from '../component/auth/SignInButton'
+import Link from '../component/auth/Link'
+import { useNavigate } from 'react-router-dom'
 const LoginPage = () => {
+  const navigate = useNavigate()
+  const handleNavigateToHome = () => {
+    navigate('/')
+  }
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -53,7 +57,7 @@ const LoginPage = () => {
             />
 
             <div>
-              <SignInButton text="Entrar" />
+              <SignInButton text="Entrar" onClick={handleNavigateToHome} />
             </div>
 
             <div className="flex justify-end">

@@ -21,11 +21,11 @@ const mockUser = {
 }
 
 const AccountPage = () => {
-    
+    const navigate = useNavigate()
     const [activeSection, setActiveSection] = useState("visao-geral")
 
     const handleLogout = () => {
-        console.log("Logout clicked")
+        navigate("/login")
     }
 
     const renderPanel = () => {

@@ -5,7 +5,8 @@ import NavBar from "../component/NavBar/NavBar"
 import ProductShoppingCartCard from "../component/ProductShoppingCartCard/ProductShoppingCartCard"
 import { mockReq } from "../mock"
 import { cart } from "../services/Cart"
-
+import BannerNav from "../component/NavBar/BannerNav"
+import logo from "./../assets/logo.png"
 const ShoppingCartPage = () => {
     const [cartItems, setCartItems] = useState([])
     const navigate = useNavigate()
@@ -57,6 +58,7 @@ const ShoppingCartPage = () => {
 
     return(
         <div className="h-[100dvh] flex flex-col overflow-hidden w-full">
+            
             <header className="grid grid-cols-3 items-center px-4 py-2 shadow shrink-0">
                 <button
                     type="button"
@@ -69,8 +71,10 @@ const ShoppingCartPage = () => {
                 <div className="justify-self-center flex justify-center items-center col-span-3 md:col-span-1">
                     <h1 className="font-bold text-2xl">Carrinho</h1>
                 </div>
+
                 <span className="hidden md:block" aria-hidden="true" />
             </header>
+             <BannerNav />
             <div className="flex flex-col items-center gap-5 flex-1 overflow-hidden px-4 pt-5">
                 <button className="w-1/3 p-2 bg-orange rounded-3xl active:scale-95 duration shrink-0" onClick={handleCheckout}>
                     <p>Finalizar pedido</p>

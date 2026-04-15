@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import './App.css'
 import AccountPage from './pages/AccountPage'
+import LoginPage from "./pages/Login"
 import HomePage from './pages/HomePage'
 import ProductPage from './pages/ProductPage'
 import SearchPage from './pages/SearchPage'
@@ -15,11 +16,13 @@ import SettingsPage from './pages/account/Settings'
 import CheckoutAddressPage from './pages/checkout/CheckoutAddressPage'
 import CheckoutPaymentPage from './pages/checkout/CheckoutPaymentPage'
 import CheckoutReviewPage from './pages/checkout/CheckoutReviewPage'
+import PaymentsPage from "./pages/account/PaymentsPage"
 function App() {
   return (
     <>
       <Router>
           <Routes>
+            <Route path="/login" element={<LoginPage />}/>
             <Route path="/" element={<HomePage/>}/>
             <Route path="/search" element={<SearchPage/>}/>
             <Route path="/account" element={<AccountPage />}/>
@@ -28,6 +31,7 @@ function App() {
             <Route path="/account/addresses" element={<AddressPage />}/>
             <Route path="/account/settings" element={<SettingsPage />}/>
             <Route path="/account/notifications" element={<NotificationsPage />}/>
+            <Route path="/account/payments" element={<PaymentsPage />}/>
             <Route path="/account/help" element={<HelpPage/>}/>
             <Route path="/account/addresses/edit" element={<AddressEditPage />}/>
             <Route path="/account/addresses/new" element={<AddressNewPage />}/>
