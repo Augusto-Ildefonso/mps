@@ -1,0 +1,211 @@
+// Mock data for admin dashboard
+
+// Sales data for chart (last 30 days)
+export const mockSalesData = [
+    { date: "1", sales: 4000 },
+    { date: "2", sales: 3000 },
+    { date: "3", sales: 2000 },
+    { date: "4", sales: 2780 },
+    { date: "5", sales: 1890 },
+    { date: "6", sales: 2390 },
+    { date: "7", sales: 3490 },
+    { date: "8", sales: 4200 },
+    { date: "9", sales: 3800 },
+    { date: "10", sales: 4300 },
+    { date: "11", sales: 5100 },
+    { date: "12", sales: 4900 },
+    { date: "13", sales: 5200 },
+    { date: "14", sales: 4800 },
+    { date: "15", sales: 5500 },
+    { date: "16", sales: 5800 },
+    { date: "17", sales: 6200 },
+    { date: "18", sales: 5900 },
+    { date: "19", sales: 6500 },
+    { date: "20", sales: 6800 },
+    { date: "21", sales: 7100 },
+    { date: "22", sales: 6900 },
+    { date: "23", sales: 7300 },
+    { date: "24", sales: 7600 },
+    { date: "25", sales: 7400 },
+    { date: "26", sales: 7800 },
+    { date: "27", sales: 8100 },
+    { date: "28", sales: 7900 },
+    { date: "29", sales: 8400 },
+    { date: "30", sales: 8700 },
+]
+
+// Top products
+export const mockTopProducts = [
+    { id: 1, name: "Notebook Dell", unitsSold: 45, revenue: 67500 },
+    { id: 2, name: "Mouse Logitech", unitsSold: 128, revenue: 12800 },
+    { id: 3, name: "Teclado Mecânico", unitsSold: 92, revenue: 27600 },
+    { id: 4, name: "Monitor 27\" LG", unitsSold: 34, revenue: 51000 },
+    { id: 5, name: "Webcam HD", unitsSold: 67, revenue: 8050 },
+]
+
+// Top clients
+export const mockTopClients = [
+    { id: 1, name: "TechCorp Brasil", totalSpent: 125400, orders: 34 },
+    { id: 2, name: "InfoSolutions", totalSpent: 98700, orders: 28 },
+    { id: 3, name: "Digital Services Ltd", totalSpent: 87600, orders: 22 },
+    { id: 4, name: "Nexus Technology", totalSpent: 76200, orders: 19 },
+    { id: 5, name: "CloudBase Systems", totalSpent: 65400, orders: 16 },
+]
+
+// All clients for clients page
+export const mockClients = [
+    {
+        id: 1,
+        name: "TechCorp Brasil",
+        email: "contact@techcorp.com.br",
+        totalPurchases: 125400,
+        accountAge: "2 years",
+        orders: 34,
+        documentType: "CNPJ",
+        lastOrder: "2026-05-10",
+    },
+    {
+        id: 2,
+        name: "InfoSolutions",
+        email: "info@infosolutions.br",
+        totalPurchases: 98700,
+        accountAge: "18 months",
+        orders: 28,
+        documentType: "CNPJ",
+        lastOrder: "2026-05-08",
+    },
+    {
+        id: 3,
+        name: "Digital Services Ltd",
+        email: "sales@digitalservices.br",
+        totalPurchases: 87600,
+        accountAge: "1 year",
+        orders: 22,
+        documentType: "CNPJ",
+        lastOrder: "2026-05-05",
+    },
+    {
+        id: 4,
+        name: "Nexus Technology",
+        email: "support@nexus.com.br",
+        totalPurchases: 76200,
+        accountAge: "14 months",
+        orders: 19,
+        documentType: "CNPJ",
+        lastOrder: "2026-04-28",
+    },
+    {
+        id: 5,
+        name: "CloudBase Systems",
+        email: "admin@cloudbase.br",
+        totalPurchases: 65400,
+        accountAge: "10 months",
+        orders: 16,
+        documentType: "CNPJ",
+        lastOrder: "2026-04-25",
+    },
+]
+
+// All products for products page
+export const mockProducts = [
+    {
+        id: 1,
+        name: "Central Multimídia 9\" CarPlay",
+        sku: "CAR-AV-001",
+        price: 1899,
+        wholesalePrice: 1450,
+        promoPrice: 1749,
+        quantity: 12,
+        category: "Áudio e Multimídia",
+        brand: "RoadMax",
+        manufacturer: "RoadMax Automotive",
+        images: ["https://via.placeholder.com/320x240"],
+        compatibleCars: ["Onix", "HB20", "Argo"],
+        description: "Central multimídia com Android Auto, CarPlay e espelhamento de tela.",
+    },
+    {
+        id: 2,
+        name: "Sensor de Estacionamento 4 Pontos",
+        sku: "CAR-PRS-002",
+        price: 249,
+        wholesalePrice: 180,
+        promoPrice: 219,
+        quantity: 45,
+        category: "Segurança e Estacionamento",
+        brand: "ParkSense",
+        manufacturer: "ParkSense Parts",
+        images: ["https://via.placeholder.com/320x240"],
+        compatibleCars: ["Corolla", "Civic", "Tracker"],
+        description: "Kit com sensores, central e buzzer para estacionamento assistido.",
+    },
+    {
+        id: 3,
+        name: "Jogo de Tapetes em Carpete Premium",
+        sku: "CAR-FLT-003",
+        price: 189,
+        wholesalePrice: 130,
+        promoPrice: 169,
+        quantity: 28,
+        category: "Proteção Interna",
+        brand: "AutoStyle",
+        manufacturer: "AutoStyle Accessories",
+        images: ["https://via.placeholder.com/320x240"],
+        compatibleCars: ["Gol", "Kwid", "C3"],
+        description: "Tapetes moldados com acabamento premium e fixação reforçada.",
+    },
+    {
+        id: 4,
+        name: "Câmera de Ré HD Universal",
+        sku: "CAR-CAM-004",
+        price: 159,
+        wholesalePrice: 115,
+        promoPrice: 139,
+        quantity: 8,
+        category: "Segurança e Estacionamento",
+        brand: "VisionDrive",
+        manufacturer: "VisionDrive Eletrônicos",
+        images: ["https://via.placeholder.com/320x240"],
+        compatibleCars: ["Sandero", "Duster", "Saveiro"],
+        description: "Câmera traseira com linha guia e instalação universal.",
+    },
+    {
+        id: 5,
+        name: "Carregador Veicular USB-C PD",
+        sku: "CAR-CHG-005",
+        price: 99,
+        wholesalePrice: 68,
+        promoPrice: 89,
+        quantity: 34,
+        category: "Elétrica e Energia",
+        brand: "PowerRide",
+        manufacturer: "PowerRide Tech",
+        images: ["https://via.placeholder.com/320x240"],
+        compatibleCars: ["Todos os modelos 12V"],
+        description: "Carregador rápido com porta USB-C e USB-A para veículos.",
+    },
+]
+
+// Dashboard overview stats
+export const mockDashboardStats = {
+    totalSales: 187500,
+    totalSalesChange: 12.5,
+    totalClients: 247,
+    totalClientsChange: 8.2,
+    totalProducts: 125,
+    totalProductsChange: -2.3,
+    avgOrderValue: 761.58,
+    avgOrderValueChange: 5.8,
+}
+
+// Client purchase history for detail view
+export const mockClientPurchaseHistory = {
+    1: [
+        { date: "2026-05-10", product: "Notebook Dell XPS", quantity: 2, amount: 3000 },
+        { date: "2026-05-05", product: "Monitor 27\" LG 4K", quantity: 1, amount: 1500 },
+        { date: "2026-04-28", product: "Teclado Mecânico RGB", quantity: 5, amount: 1500 },
+    ],
+    2: [
+        { date: "2026-05-08", product: "Mouse Logitech MX Master", quantity: 10, amount: 1000 },
+        { date: "2026-04-20", product: "Webcam Full HD", quantity: 3, amount: 360 },
+    ],
+}

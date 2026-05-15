@@ -19,6 +19,11 @@ import CheckoutAddressPage from './pages/checkout/CheckoutAddressPage'
 import CheckoutPaymentPage from './pages/checkout/CheckoutPaymentPage'
 import CheckoutReviewPage from './pages/checkout/CheckoutReviewPage'
 import PaymentsPage from "./pages/account/PaymentsPage"
+import ProtectAdminRoute from './component/ProtectAdminRoute'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminClients from './pages/admin/AdminClients'
+import AdminProducts from './pages/admin/AdminProducts'
+import AdminManagement from './pages/admin/AdminManagement'
 function App() {
   return (
     <>
@@ -43,6 +48,10 @@ function App() {
             <Route path="/checkout/address" element={<CheckoutAddressPage />}/>
             <Route path="/checkout/payment" element={<CheckoutPaymentPage />}/>
             <Route path="/checkout/review" element={<CheckoutReviewPage />}/>
+            <Route path="/admin/dashboard" element={<ProtectAdminRoute><AdminDashboard /></ProtectAdminRoute>}/>
+            <Route path="/admin/clients" element={<ProtectAdminRoute><AdminClients /></ProtectAdminRoute>}/>
+            <Route path="/admin/products" element={<ProtectAdminRoute><AdminProducts /></ProtectAdminRoute>}/>
+            <Route path="/admin/management" element={<ProtectAdminRoute><AdminManagement /></ProtectAdminRoute>}/>
           </Routes>
       </Router>
     </>
