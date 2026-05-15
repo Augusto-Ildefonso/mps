@@ -92,7 +92,7 @@ const AddressPage = ({ title }) => {
 
     return (
         <div>
-            <Header />
+            <Header showBackButton={true} />
             <h1 className="text-center font-bold text-deep-blue text-xl">{title}</h1>
             <form className="flex flex-col gap-4 p-4" onSubmit={handleSubmit}>
                 <TextField id="Identificação" name="Identificação" label="Identificação*" placeholder="Casa, Trabalho, etc." onBlur={() => setIdentificacaoError(validateIdentificacao(identificacao))} value={identificacao} onChange={(e) => { setIdentificacao(e.target.value); if (identificacaoError) setIdentificacaoError(validateIdentificacao(e.target.value)); }} />

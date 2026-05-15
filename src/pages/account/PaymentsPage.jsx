@@ -6,7 +6,7 @@ import NavBar from "../../component/NavBar/NavBar"
 const PaymentsPage = () => {
     return (
         <div>
-            <Header />
+            <Header showBackButton={true} />
             <BannerNav />
             <div className="px-2 md:px-4 pb-20 max-w-7xl mx-auto mt-4 rounded-xl">
             <AccountPaymentsPanel />

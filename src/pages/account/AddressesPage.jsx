@@ -15,7 +15,7 @@ const AddressPage = ({addresses}) => {
     }
     return (
         <div className="address-page p-3">
-            <Header />
+            <Header showBackButton={true} />
             <h1 className="text-xl font-bold text-center text-deep-blue mb-3 ">Meus Endereços</h1>
             <div className="flex flex-col gap-4">
             {mockAddress.map((address, _) => (
