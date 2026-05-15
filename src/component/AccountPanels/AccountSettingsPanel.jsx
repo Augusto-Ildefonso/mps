@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom"
 import { LuSettings } from "react-icons/lu"
 
 const AccountSettingsPanel = () => {
+    const navigate = useNavigate()
+
     return (
         <div className="flex flex-col gap-4">
             <div className="bg-full-white rounded-xl p-4 shadow-sm">
@@ -13,7 +16,7 @@ const AccountSettingsPanel = () => {
                         <button className="w-full px-4 py-3 bg-light-gray text-deep-blue rounded-lg font-medium hover:bg-gray transition active:scale-95 text-left">
                             Editar Dados Pessoais
                         </button>
-                        <button className="w-full px-4 py-3 bg-light-gray text-deep-blue rounded-lg font-medium hover:bg-gray transition active:scale-95 text-left">
+                        <button type="button" onClick={() => navigate("/account/password")} className="w-full px-4 py-3 bg-light-gray text-deep-blue rounded-lg font-medium hover:bg-gray transition active:scale-95 text-left">
                             Alterar Senha
                         </button>
                         <button className="w-full px-4 py-3 bg-light-gray text-deep-blue rounded-lg font-medium hover:bg-gray transition active:scale-95 text-left">
