@@ -9,7 +9,7 @@ const Orders = ({orders}) => {
     
     return ( 
     <div className="Pedidos">
-      <Header />
+      <Header showBackButton={true} />
       <h1 className="text-xl font-bold text-center text-deep-blue">Meus Pedidos</h1>
         <div className="flex flex-col gap-4">
             {mockOrders.map((order) => (
