@@ -67,7 +67,7 @@ const LoginPage = () => {
             <div className='flex justify-end'>
                 <p className="text-center text-xs text-slate-500">
                   Não tem uma conta?{' '}
-                  <Link text="Crie uma nova" href="#" />
+                  <Link text="Crie uma nova" href="/register" />
                 </p>
             </div>
 

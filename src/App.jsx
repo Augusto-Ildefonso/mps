@@ -3,6 +3,7 @@ import './App.css'
 import AccountPage from './pages/AccountPage'
 import LoginPage from "./pages/Login"
 import HomePage from './pages/HomePage'
+import RegisterPage from './pages/Register'
 import ProductPage from './pages/ProductPage'
 import SearchPage from './pages/SearchPage'
 import ShoppingCartPage from './pages/ShoppingCartPage'
@@ -11,6 +12,7 @@ import AddressEditPage from './pages/account/AddressEditPage'
 import AddressPage from './pages/account/AddressesPage'
 import HelpPage from './pages/account/HelpPage'
 import NotificationsPage from './pages/account/NotificationsPage'
+import ChangePasswordPage from './pages/account/ChangePassword'
 import Orders from './pages/account/Orders'
 import SettingsPage from './pages/account/Settings'
 import CheckoutAddressPage from './pages/checkout/CheckoutAddressPage'
@@ -23,6 +25,7 @@ function App() {
       <Router>
           <Routes>
             <Route path="/login" element={<LoginPage />}/>
+            <Route path="/register" element={<RegisterPage />}/>
             <Route path="/" element={<HomePage/>}/>
             <Route path="/search" element={<SearchPage/>}/>
             <Route path="/account" element={<AccountPage />}/>
@@ -30,6 +33,7 @@ function App() {
             <Route path="/account/orders" element={<Orders />}/>
             <Route path="/account/addresses" element={<AddressPage />}/>
             <Route path="/account/settings" element={<SettingsPage />}/>
+            <Route path="/account/password" element={<ChangePasswordPage />}/>
             <Route path="/account/notifications" element={<NotificationsPage />}/>
             <Route path="/account/payments" element={<PaymentsPage />}/>
             <Route path="/account/help" element={<HelpPage/>}/>
