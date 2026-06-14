@@ -24,17 +24,19 @@ const OrderBlock = ({ order }) => {
   const [expanded, setExpanded] = useState(false)
   const [detail, setDetail] = useState(null)
   const [loadingDetail, setLoadingDetail] = useState(false)
+  const [detailError, setDetailError] = useState(false)
 
   const handleToggle = async () => {
     const next = !expanded
     setExpanded(next)
+    if (!next) setDetailError(false)
     if (next && !detail) {
       setLoadingDetail(true)
       try {
         const completeOrder = await getOrder(order.id)
         setDetail(completeOrder)
       } catch {
-        // order detail failed to load — user can retry by collapsing and expanding
+        setDetailError(true)
       } finally {
         setLoadingDetail(false)
       }
@@ -82,6 +84,9 @@ const OrderBlock = ({ order }) => {
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}`}>
         {loadingDetail && (
           <p className="py-4 text-sm text-gray text-center">Carregando itens...</p>
+        )}
+        {!loadingDetail && detailError && (
+          <p className="py-4 text-sm text-red text-center">Erro ao carregar itens. Tente novamente.</p>
         )}
         {!loadingDetail && detail && (
           <>
