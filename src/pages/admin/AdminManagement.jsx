@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import AdminLayout from "../../component/admin/AdminLayout"
 import AdminPageHeader from "../../component/admin/AdminPageHeader"
 import AdminSelect from "../../component/admin/forms/AdminSelect"
@@ -7,74 +7,85 @@ import ManagementTabs from "../../component/admin/management/ManagementTabs"
 import ProductCatalogPanel from "../../component/admin/management/ProductCatalogPanel"
 import ProductFormPanel from "../../component/admin/management/ProductFormPanel"
 import {
-    buildProductPayload,
+    buildApiProductPayload,
     createEmptyProductForm,
     getUniqueValues,
+    loadApiProductIntoForm,
     mergeUniqueValues,
 } from "../../component/admin/management/managementUtils"
-import { mockProducts } from "../../mock/adminMock"
+import {
+    createProduct,
+    deleteProduct,
+    searchProducts,
+    updateProduct,
+    uploadProductImage,
+} from "../../services/api/products"
 
 const AdminManagement = () => {
     const [activeSection, setActiveSection] = useState("management")
     const [activeTab, setActiveTab] = useState("create")
-    const [products, setProducts] = useState(mockProducts)
-    const [categoryOptions, setCategoryOptions] = useState(() => getUniqueValues(mockProducts, (product) => product.category))
-    const [carOptions, setCarOptions] = useState(() =>
-        getUniqueValues(mockProducts.flatMap((product) => product.compatibleCars || []), (value) => value),
-    )
+    const [products, setProducts] = useState([])
+    const [loadingProducts, setLoadingProducts] = useState(true)
+    const [apiError, setApiError] = useState(null)
+
+    const [categoryOptions, setCategoryOptions] = useState([])
+    const [carOptions, setCarOptions] = useState([])
+
     const [createForm, setCreateForm] = useState(createEmptyProductForm())
+    const [createFile, setCreateFile] = useState(null)
     const [editForm, setEditForm] = useState(createEmptyProductForm())
-    const [selectedProductId, setSelectedProductId] = useState(mockProducts[0]?.id ?? null)
-    const [createImageDraft, setCreateImageDraft] = useState("")
-    const [createImages, setCreateImages] = useState([])
+    const [editFile, setEditFile] = useState(null)
+    const [selectedProductId, setSelectedProductId] = useState(null)
+
     const [createCars, setCreateCars] = useState([])
-    const [editImageDraft, setEditImageDraft] = useState("")
-    const [editImages, setEditImages] = useState(products[0]?.images ?? [])
-    const [editCars, setEditCars] = useState(products[0]?.compatibleCars ?? [])
-    const [newCategoryDraft, setNewCategoryDraft] = useState("")
-    const [newCarDraft, setNewCarDraft] = useState("")
+    const [editCars, setEditCars] = useState([])
     const [selectedCreateCar, setSelectedCreateCar] = useState("")
     const [selectedEditCar, setSelectedEditCar] = useState("")
+    const [newCategoryDraft, setNewCategoryDraft] = useState("")
+    const [newCarDraft, setNewCarDraft] = useState("")
+
+    const loadProducts = useCallback(async () => {
+        setLoadingProducts(true)
+        setApiError(null)
+        try {
+            const data = await searchProducts("")
+            setProducts(data)
+        } catch (err) {
+            setApiError(err.message ?? "Erro ao carregar produtos.")
+        } finally {
+            setLoadingProducts(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        loadProducts()
+    }, [loadProducts])
 
     const totalStockValue = useMemo(() => {
-        return products.reduce((sum, product) => sum + product.price * product.quantity, 0)
+        return products.reduce(
+            (sum, p) => sum + parseFloat(p.VLR_VENDA1) * p.estoque,
+            0
+        )
     }, [products])
 
-    const selectedProduct = useMemo(() => {
-        return products.find((product) => product.id === selectedProductId) ?? null
-    }, [products, selectedProductId])
+    const selectedProduct = useMemo(
+        () => products.find((p) => p.Idproduto === selectedProductId) ?? null,
+        [products, selectedProductId]
+    )
 
     const updateSelectedProductForm = (product) => {
-        if (!product) {
-            return
-        }
-
-        setSelectedProductId(product.id)
-        setEditForm({
-            name: product.name,
-            sku: product.sku,
-            brand: product.brand ?? "",
-            manufacturer: product.manufacturer ?? "",
-            retailPrice: String(product.price ?? ""),
-            wholesalePrice: String(product.wholesalePrice ?? ""),
-            promoPrice: String(product.promoPrice ?? ""),
-            quantity: String(product.quantity ?? ""),
-            category: product.category ?? "",
-            description: product.description ?? "",
-        })
-        setEditImages([...(product.images ?? [])])
-        setEditCars([...(product.compatibleCars ?? [])])
+        if (!product) return
+        setSelectedProductId(product.Idproduto)
+        setEditForm(loadApiProductIntoForm(product))
+        setEditCars([])
         setSelectedEditCar("")
+        setEditFile(null)
     }
 
     const addUniqueItem = (value, setter) => {
-        const nextValue = value.trim()
-
-        if (!nextValue) {
-            return
-        }
-
-        setter((current) => (current.includes(nextValue) ? current : [...current, nextValue]))
+        const next = value.trim()
+        if (!next) return
+        setter((current) => (current.includes(next) ? current : [...current, next]))
     }
 
     const removeItem = (value, setter) => {
@@ -83,101 +94,75 @@ const AdminManagement = () => {
 
     const handleCreateChange = (event) => {
         const { name, value } = event.target
-
-        setCreateForm((current) => ({
-            ...current,
-            [name]: value,
-        }))
+        setCreateForm((current) => ({ ...current, [name]: value }))
     }
 
     const handleEditChange = (event) => {
         const { name, value } = event.target
-
-        setEditForm((current) => ({
-            ...current,
-            [name]: value,
-        }))
+        setEditForm((current) => ({ ...current, [name]: value }))
     }
 
-    const handleCreateSubmit = (event) => {
+    const handleCreateSubmit = async (event) => {
         event.preventDefault()
-
-        const nextProduct = buildProductPayload(createForm, createImages, createCars)
-
-        setProducts((current) => [nextProduct, ...current])
-        setCategoryOptions((current) => mergeUniqueValues(current, [nextProduct.category]))
-        setCarOptions((current) => mergeUniqueValues(current, nextProduct.compatibleCars))
-        setCreateForm(createEmptyProductForm())
-        setCreateImageDraft("")
-        setCreateImages([])
-        setCreateCars([])
-        setSelectedCreateCar("")
-        setSelectedProductId(nextProduct.id)
-    }
-
-    const handleEditSubmit = (event) => {
-        event.preventDefault()
-
-        if (!selectedProduct) {
-            return
-        }
-
-        const updatedProduct = buildProductPayload(editForm, editImages, editCars, selectedProduct.id)
-
-        setProducts((current) => current.map((product) => (product.id === selectedProduct.id ? updatedProduct : product)))
-        setCategoryOptions((current) => mergeUniqueValues(current, [updatedProduct.category]))
-        setCarOptions((current) => mergeUniqueValues(current, updatedProduct.compatibleCars))
-        setSelectedProductId(updatedProduct.id)
-    }
-
-    const handleDelete = (productId) => {
-        setProducts((current) => {
-            const nextProducts = current.filter((product) => product.id !== productId)
-
-            if (selectedProductId === productId) {
-                const nextProduct = nextProducts[0] ?? null
-
-                if (nextProduct) {
-                    updateSelectedProductForm(nextProduct)
-                } else {
-                    setSelectedProductId(null)
-                    setEditForm(createEmptyProductForm())
-                    setEditImages([])
-                    setEditCars([])
-                }
+        setApiError(null)
+        try {
+            const payload = buildApiProductPayload(createForm)
+            const newProduct = await createProduct(payload)
+            if (createFile) {
+                await uploadProductImage(newProduct.Idproduto, createFile)
             }
+            await loadProducts()
+            setCreateForm(createEmptyProductForm())
+            setCreateFile(null)
+            setCreateCars([])
+            setSelectedCreateCar("")
+        } catch (err) {
+            setApiError(err.message ?? "Erro ao criar produto.")
+        }
+    }
 
-            return nextProducts
-        })
+    const handleEditSubmit = async (event) => {
+        event.preventDefault()
+        if (!selectedProduct) return
+        setApiError(null)
+        try {
+            const payload = buildApiProductPayload(editForm)
+            await updateProduct(selectedProduct.Idproduto, payload)
+            if (editFile) {
+                await uploadProductImage(selectedProduct.Idproduto, editFile)
+            }
+            await loadProducts()
+            setEditFile(null)
+        } catch (err) {
+            setApiError(err.message ?? "Erro ao atualizar produto.")
+        }
+    }
+
+    const handleDelete = async (productId) => {
+        setApiError(null)
+        try {
+            await deleteProduct(productId)
+            await loadProducts()
+            if (selectedProductId === productId) {
+                setSelectedProductId(null)
+                setEditForm(createEmptyProductForm())
+            }
+        } catch (err) {
+            setApiError(err.message ?? "Erro ao excluir produto.")
+        }
     }
 
     const addCategoryOption = () => {
-        const nextCategory = newCategoryDraft.trim()
-
-        if (!nextCategory) {
-            setNewCategoryDraft("")
-            return
-        }
-
-        setCategoryOptions((current) => mergeUniqueValues(current, [nextCategory]))
-        if (!createForm.category) {
-            setCreateForm((current) => ({ ...current, category: nextCategory }))
-        }
-        if (!editForm.category) {
-            setEditForm((current) => ({ ...current, category: nextCategory }))
-        }
+        const next = newCategoryDraft.trim()
+        if (!next) { setNewCategoryDraft(""); return }
+        setCategoryOptions((current) => mergeUniqueValues(current, [next]))
         setNewCategoryDraft("")
     }
 
     const addCarOption = () => {
-        const nextCar = newCarDraft.trim()
-
-        if (!nextCar) {
-            setNewCarDraft("")
-            return
-        }
-
-        setCarOptions((current) => mergeUniqueValues(current, [nextCar]))
+        const next = newCarDraft.trim()
+        if (!next) { setNewCarDraft(""); return }
+        setCarOptions((current) => mergeUniqueValues(current, [next]))
         setNewCarDraft("")
     }
 
@@ -189,17 +174,18 @@ const AdminManagement = () => {
     const editSelector = (
         <AdminSelect
             value={selectedProductId ?? ""}
-            onChange={(event) =>
-                updateSelectedProductForm(products.find((product) => product.id === Number(event.target.value)) ?? null)
-            }
+            onChange={(event) => {
+                const p = products.find((p) => p.Idproduto === Number(event.target.value)) ?? null
+                updateSelectedProductForm(p)
+            }}
             disabled={products.length === 0}
         >
             {products.length === 0 ? (
                 <option value="">Sem produtos cadastrados</option>
             ) : (
                 products.map((product) => (
-                    <option key={product.id} value={product.id}>
-                        {product.name} - {product.sku}
+                    <option key={product.Idproduto} value={product.Idproduto}>
+                        {product.Descricao} — {product.Marca}
                     </option>
                 ))
             )}
@@ -211,27 +197,36 @@ const AdminManagement = () => {
             <div className="space-y-6">
                 <AdminPageHeader
                     title="Gerenciar produtos"
-                    description="Crie acessórios automotivos em um painel e edite itens existentes em outro, sem apertar tudo na mesma área."
+                    description="Crie, edite e exclua produtos do catálogo."
                 />
+
+                {apiError && (
+                    <div className="rounded-xl bg-red/10 border border-red px-4 py-3 text-sm text-red font-semibold">
+                        {apiError}
+                    </div>
+                )}
+
+                {loadingProducts && (
+                    <p className="text-sm text-gray text-center">Carregando catálogo...</p>
+                )}
 
                 <ManagementTabs activeTab={activeTab} onChange={setActiveTab} />
 
                 <div className="space-y-6">
                     {activeTab === "create" && (
                         <ProductFormPanel
-                            title="Novo acessório"
-                            description="Cadastro guiado com listas para categoria, imagens e fitment."
+                            title="Novo produto"
+                            description="Preencha os campos e salve para criar o produto via API."
                             formData={createForm}
                             onChange={handleCreateChange}
                             categoryOptions={categoryOptions}
-                            imageDraft={createImageDraft}
-                            onImageDraftChange={(event) => setCreateImageDraft(event.target.value)}
-                            onAddImage={() => {
-                                addUniqueItem(createImageDraft, setCreateImages)
-                                setCreateImageDraft("")
-                            }}
-                            images={createImages}
-                            onRemoveImage={(imageUrl) => removeItem(imageUrl, setCreateImages)}
+                            imageDraft=""
+                            onImageDraftChange={() => {}}
+                            onAddImage={() => {}}
+                            images={[]}
+                            onRemoveImage={() => {}}
+                            imageFile={createFile}
+                            onImageFileChange={(e) => setCreateFile(e.target.files[0] ?? null)}
                             carOptions={carOptions}
                             selectedCar={selectedCreateCar}
                             onSelectedCarChange={setSelectedCreateCar}
@@ -242,26 +237,25 @@ const AdminManagement = () => {
                             cars={createCars}
                             onRemoveCar={(car) => removeItem(car, setCreateCars)}
                             onSubmit={handleCreateSubmit}
-                            submitLabel="Adicionar acessório"
+                            submitLabel="Adicionar produto"
                         />
                     )}
 
                     {activeTab === "edit" && (
                         <ProductFormPanel
-                            title="Editar acessório existente"
-                            description="Escolha um item e edite ele em um painel separado."
+                            title="Editar produto existente"
+                            description="Escolha um produto e edite seus dados."
                             formTopSlot={editSelector}
                             formData={editForm}
                             onChange={handleEditChange}
                             categoryOptions={categoryOptions}
-                            imageDraft={editImageDraft}
-                            onImageDraftChange={(event) => setEditImageDraft(event.target.value)}
-                            onAddImage={() => {
-                                addUniqueItem(editImageDraft, setEditImages)
-                                setEditImageDraft("")
-                            }}
-                            images={editImages}
-                            onRemoveImage={(imageUrl) => removeItem(imageUrl, setEditImages)}
+                            imageDraft=""
+                            onImageDraftChange={() => {}}
+                            onAddImage={() => {}}
+                            images={[]}
+                            onRemoveImage={() => {}}
+                            imageFile={editFile}
+                            onImageFileChange={(e) => setEditFile(e.target.files[0] ?? null)}
                             carOptions={carOptions}
                             selectedCar={selectedEditCar}
                             onSelectedCarChange={setSelectedEditCar}
@@ -294,12 +288,14 @@ const AdminManagement = () => {
                     )}
                 </div>
 
-                <ProductCatalogPanel
-                    products={products}
-                    totalStockValue={totalStockValue}
-                    onEdit={handleCatalogEdit}
-                    onDelete={handleDelete}
-                />
+                {!loadingProducts && (
+                    <ProductCatalogPanel
+                        products={products}
+                        totalStockValue={totalStockValue}
+                        onEdit={handleCatalogEdit}
+                        onDelete={handleDelete}
+                    />
+                )}
             </div>
         </AdminLayout>
     )

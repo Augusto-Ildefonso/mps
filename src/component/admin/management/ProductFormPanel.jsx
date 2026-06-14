@@ -14,6 +14,8 @@ const ProductFormPanel = ({
     onAddImage,
     images,
     onRemoveImage,
+    imageFile,
+    onImageFileChange,
     carOptions,
     selectedCar,
     onSelectedCarChange,
@@ -124,10 +126,24 @@ const ProductFormPanel = ({
                         placeholder="Estoque"
                     />
                     <AdminInput
-                        value={imageDraft}
-                        onChange={onImageDraftChange}
-                        placeholder="Adicionar URL da imagem"
+                        name="unidade"
+                        value={formData.unidade ?? ""}
+                        onChange={onChange}
+                        placeholder="Unidade (PC, PAR, KT...)"
                     />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm font-medium text-deep-blue">Imagem do produto</label>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={onImageFileChange}
+                        className="text-sm text-dark-gray file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-light-gray file:text-deep-blue hover:file:bg-gray/20"
+                    />
+                    {imageFile && (
+                        <p className="text-xs text-gray">Selecionado: {imageFile.name}</p>
+                    )}
                 </div>
 
                 <div className="flex flex-wrap gap-2">
