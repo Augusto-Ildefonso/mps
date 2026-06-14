@@ -1,9 +1,11 @@
-import { useMemo } from "react"
+import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import Button from "../../component/GeneralButton/Button"
 import Header from "../../component/Header/Header"
-import { mockReq } from "../../mock"
+import Alert from "../../component/Alert/Alert"
 import { cart } from "../../services/Cart"
+import { getProduct } from "../../services/api/products"
+import { createOrder } from "../../services/api/orders"
 
 const CheckoutReviewPage = () => {
     const navigate = useNavigate()
@@ -15,31 +17,39 @@ const CheckoutReviewPage = () => {
     const cardBrand = checkoutState.cardBrand ?? "Cartão"
     const cardLast4 = checkoutState.cardLast4 ?? "0000"
 
-    const cartItems = useMemo(() => {
-        const productsById = new Map(mockReq.map((product) => [product.id, product]))
+    const [cartItems, setCartItems] = useState([])
+    const [total, setTotal] = useState(0)
+    const [loading, setLoading] = useState(true)
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [orderError, setOrderError] = useState(null)
+    const [alertVisible, setAlertVisible] = useState(false)
 
-        return cart
-            .getItems()
-            .map((cartItem) => {
-                const product = productsById.get(cartItem.id)
-
-                if (!product) {
-                    return null
-                }
-
-                return {
-                    ...product,
-                    quantity: cartItem.number,
-                    subtotal: product.price * cartItem.number,
-                }
-            })
-            .filter(Boolean)
+    useEffect(() => {
+        const loadItems = async () => {
+            const items = cart.getItems()
+            const resolved = await Promise.all(
+                items.map(async (item) => {
+                    try {
+                        const product = await getProduct(item.id)
+                        return {
+                            id: product.Idproduto,
+                            name: product.Descricao,
+                            price: parseFloat(product.VLR_VENDA1),
+                            quantity: item.number,
+                            subtotal: parseFloat(product.VLR_VENDA1) * item.number,
+                        }
+                    } catch {
+                        return null
+                    }
+                })
+            )
+            const valid = resolved.filter(Boolean)
+            setCartItems(valid)
+            setTotal(valid.reduce((sum, item) => sum + item.subtotal, 0))
+            setLoading(false)
+        }
+        loadItems()
     }, [])
-
-    const totalAmount = useMemo(
-        () => cartItems.reduce((total, item) => total + item.subtotal, 0),
-        [cartItems]
-    )
 
     const paymentLabel =
         paymentMethod === "card" ? `${cardBrand} final ${cardLast4}` : "Pix"
@@ -52,8 +62,26 @@ const CheckoutReviewPage = () => {
             maximumFractionDigits: 2,
         })
 
-    const handleFinishOrder = () => {
-        navigate("/account/orders")
+    const handleFinishOrder = async () => {
+        if (isSubmitting) return
+        setIsSubmitting(true)
+        setOrderError(null)
+        try {
+            const items = cart.getItems().map((item) => ({
+                id_product: item.id,
+                quantity: item.number,
+            }))
+            await createOrder({ items })
+            cart.clear()
+            navigate("/account/orders")
+        } catch (err) {
+            const message = err.items
+                ? `${err.message}: ${err.items.map((i) => `Produto #${i.id_product} — ${i.reason}`).join("; ")}`
+                : (err.message ?? "Erro ao finalizar pedido.")
+            setOrderError(message)
+            setAlertVisible(true)
+            setIsSubmitting(false)
+        }
     }
 
     return (
@@ -69,17 +97,16 @@ const CheckoutReviewPage = () => {
 
                     <section className="rounded-xl bg-full-white p-4 shadow-[0_4px_12px_rgba(15,23,42,0.06)]">
                         <h2 className="text-lg font-bold text-deep-blue">Itens do carrinho</h2>
-                        {cartItems.length > 0 ? (
+                        {loading ? (
+                            <p className="mt-2 text-sm text-gray">Carregando itens...</p>
+                        ) : cartItems.length > 0 ? (
                             <div className="mt-3 flex flex-col gap-3">
                                 {cartItems.map((item) => (
                                     <div key={item.id} className="rounded-xl border border-slate-200 p-3">
                                         <div className="flex items-start justify-between gap-3">
-                                            <div className="flex items-center gap-3">
-                                                <img src={item.url} alt={item.alt} className="h-14 w-14 rounded-lg object-cover bg-light-gray" />
-                                                <div>
-                                                    <p className="font-bold text-deep-blue">{item.name}</p>
-                                                    <p className="text-sm text-gray">Qtd: {item.quantity}</p>
-                                                </div>
+                                            <div>
+                                                <p className="font-bold text-deep-blue">{item.name}</p>
+                                                <p className="text-sm text-gray">Qtd: {item.quantity}</p>
                                             </div>
                                             <p className="font-bold text-deep-blue">{formatCurrency(item.subtotal)}</p>
                                         </div>
@@ -95,7 +122,7 @@ const CheckoutReviewPage = () => {
                         <h2 className="text-lg font-bold text-deep-blue">Endereço de entrega</h2>
                         <p className="mt-2 text-sm text-gray">
                             {selectedAddress
-                                ? `${selectedAddress.name} - ${selectedAddress.street}, ${selectedAddress.number} - ${selectedAddress.city}/${selectedAddress.state}`
+                                ? `${selectedAddress.name} — ${selectedAddress.street}, ${selectedAddress.number} — ${selectedAddress.city}/${selectedAddress.state}`
                                 : "Endereço não informado."}
                         </p>
                     </section>
@@ -108,17 +135,24 @@ const CheckoutReviewPage = () => {
                     <section className="rounded-xl bg-full-white p-4 shadow-[0_4px_12px_rgba(15,23,42,0.06)]">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray">Total do pedido</p>
-                            <p className="text-xl font-extrabold text-deep-blue">{formatCurrency(totalAmount)}</p>
+                            <p className="text-xl font-extrabold text-deep-blue">{formatCurrency(total)}</p>
                         </div>
                     </section>
 
                     <Button
                         onClick={handleFinishOrder}
                         bg_color="bg-orange"
-                        text="Finalizar pedido"
+                        text={isSubmitting ? "Enviando..." : "Finalizar pedido"}
                     />
                 </div>
             </main>
+
+            <Alert
+                isVisible={alertVisible}
+                message={orderError ?? ""}
+                duration={6000}
+                onClose={() => setAlertVisible(false)}
+            />
         </div>
     )
 }
