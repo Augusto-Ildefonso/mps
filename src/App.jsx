@@ -44,7 +44,7 @@ function App() {
             <Route path="/account/help" element={<HelpPage/>}/>
             <Route path="/account/addresses/edit" element={<AddressEditPage />}/>
             <Route path="/account/addresses/new" element={<AddressNewPage />}/>
-            <Route path="/product" element={<ProductPage />}/>
+            <Route path="/product/:id" element={<ProductPage />}/>
             <Route path="/checkout/address" element={<CheckoutAddressPage />}/>
             <Route path="/checkout/payment" element={<CheckoutPaymentPage />}/>
             <Route path="/checkout/review" element={<CheckoutReviewPage />}/>
