@@ -96,7 +96,7 @@ const OrderBlock = ({ order }) => {
                   <p className="font-bold text-deep-blue">Produto #{item.id_product}</p>
                   <p className="text-sm text-gray">Qtd: {item.quantity}</p>
                 </div>
-                <p className="font-bold">{formatCurrency(item.unit_price * item.quantity)}</p>
+                <p className="font-bold">{formatCurrency(parseFloat(item.unit_price) * item.quantity)}</p>
               </div>
             ))}
           </>

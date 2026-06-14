@@ -68,7 +68,7 @@ const CheckoutReviewPage = () => {
         setOrderError(null)
         try {
             const items = cart.getItems().map((item) => ({
-                id_product: item.id,
+                id_product: Number(item.id),
                 quantity: item.number,
             }))
             await createOrder({ items })
