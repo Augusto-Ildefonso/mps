@@ -135,6 +135,24 @@ describe('deleteProduct', () => {
   })
 })
 
+describe('uploadProductImage', () => {
+  it('posts multipart to the imagens endpoint and returns the image', async () => {
+    const mockImage = { id: 1, id_produto: 108, path: 'abc.jpg', created_at: '2026-01-01' }
+    mock
+      .onPost('/api/products/108/imagens')
+      .reply(200, { status: 'ok', data: { image: mockImage }, message: null })
+
+    const file = new File(['content'], 'photo.jpg', { type: 'image/jpeg' })
+    const result = await uploadProductImage(108, file)
+
+    expect(result.id).toBe(1)
+    expect(mock.history.post[0].url).toBe('/api/products/108/imagens')
+    const body = mock.history.post[0].data
+    expect(body).toBeInstanceOf(FormData)
+    expect(body.get('file')).toBeInstanceOf(File)
+  })
+})
+
 describe('listProductImages', () => {
   it('returns images array', async () => {
     const mockImages = [{ id: 1, id_produto: 108, path: 'abc.jpg', created_at: '2026-01-01' }]
