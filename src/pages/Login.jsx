@@ -6,9 +6,13 @@ import SocialLoginLink from '../component/auth/SocialLoginLink'
 import SignInButton from '../component/auth/SignInButton'
 import Link from '../component/auth/Link'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 const LoginPage = () => {
   const navigate = useNavigate()
+  const { setToken } = useAuth()
   const handleNavigateToHome = () => {
+    // SWAP POINT: replace the line below with a real auth API call when ready
+    setToken(import.meta.env.VITE_DEV_JWT_TOKEN ?? '')
     navigate('/')
   }
   const [formData, setFormData] = useState({
