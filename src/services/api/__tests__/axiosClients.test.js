@@ -1,19 +1,12 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import MockAdapter from 'axios-mock-adapter'
 
-// Polyfill localStorage for Node environment (vitest environment: 'node')
-if (typeof localStorage === 'undefined') {
-  const store = {}
-  vi.stubGlobal('localStorage', {
-    getItem: (key) => Object.prototype.hasOwnProperty.call(store, key) ? store[key] : null,
-    setItem: (key, value) => { store[key] = String(value) },
-    removeItem: (key) => { delete store[key] },
-    clear: () => { Object.keys(store).forEach((k) => delete store[k]) },
-  })
-}
+// Node.js 22+ defines globalThis.localStorage as undefined (experimental Web Storage).
+// vitest's jsdom environment does not override it (not in the KEYS whitelist).
+// Redirect the global to jsdom's real Storage instance so tests use the proper API.
+vi.stubGlobal('localStorage', globalThis.jsdom.window.localStorage)
 
-// We import after setting env so Vite replaces import.meta.env
-// In Node (vitest/node env) import.meta.env is undefined — fall back to defaults
 import { produtosClient, pedidosClient } from '../axiosClients.js'
 
 describe('produtosClient', () => {

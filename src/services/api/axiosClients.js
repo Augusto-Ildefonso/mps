@@ -1,12 +1,10 @@
 import axios from 'axios'
 
 const PRODUTOS_BASE_URL =
-  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_PRODUTOS_API_URL) ||
-  'http://localhost:3000'
+  import.meta.env?.VITE_PRODUTOS_API_URL ?? 'http://localhost:3000'
 
 const PEDIDOS_BASE_URL =
-  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_PEDIDOS_API_URL) ||
-  'http://localhost:3001'
+  import.meta.env?.VITE_PEDIDOS_API_URL ?? 'http://localhost:3001'
 
 function attachErrorInterceptor(client) {
   client.interceptors.response.use(
