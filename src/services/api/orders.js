@@ -11,13 +11,19 @@ export async function createOrder(payload) {
 }
 
 /**
- * List orders for the authenticated customer (lightweight — no items/total).
+ * List orders for the authenticated customer.
+ * The API returns CompleteOrder[] — we flatten the nested .order to top level
+ * and attach items/total under _items / _total so consumers see a flat Order shape.
  * @param {{ status?: string, limit?: number }} [params]
  * @returns {Promise<Order[]>}
  */
 export async function listOrders(params) {
   const response = await pedidosClient.get('/api/pedidos', { params })
-  return response.data.data.orders
+  return response.data.data.orders.map((complete) => ({
+    ...complete.order,
+    _items: complete.items,
+    _total: complete.total,
+  }))
 }
 
 /**

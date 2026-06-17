@@ -3,35 +3,43 @@ import { LuArrowLeft } from "react-icons/lu"
 import { useNavigate } from "react-router-dom"
 import NavBar from "../component/NavBar/NavBar"
 import ProductShoppingCartCard from "../component/ProductShoppingCartCard/ProductShoppingCartCard"
-import { mockReq } from "../mock"
 import { cart } from "../services/Cart"
+import { getProduct } from "../services/api/products"
 import BannerNav from "../component/NavBar/BannerNav"
-import logo from "./../assets/logo.png"
+
 const ShoppingCartPage = () => {
     const [cartItems, setCartItems] = useState([])
+    const [loading, setLoading] = useState(true)
     const navigate = useNavigate()
 
-    const syncCartItems = useCallback(() => {
-        const productsById = new Map(mockReq.map((product) => [product.id, product]))
-
-        const syncedItems = cart
-            .getItems()
-            .map((cartItem) => {
-                const product = productsById.get(cartItem.id)
-
-                if (!product) {
-                    return null
-                }
-
-                return {
-                    ...product,
-                    number: cartItem.number,
-                }
-            })
-            .filter(Boolean)
-
-        setCartItems(syncedItems)
+    const syncCartItems = useCallback(async () => {
+        setLoading(true)
+        try {
+            const items = cart.getItems()
+            const resolved = await Promise.all(
+                items.map(async (cartItem) => {
+                    try {
+                        const product = await getProduct(cartItem.id)
+                        return {
+                            id: product.Idproduto,
+                            name: product.Descricao,
+                            price: parseFloat(product.VLR_VENDA1),
+                            number: cartItem.number,
+                        }
+                    } catch {
+                        return null
+                    }
+                })
+            )
+            setCartItems(resolved.filter(Boolean))
+        } finally {
+            setLoading(false)
+        }
     }, [])
+
+    useEffect(() => {
+        syncCartItems()
+    }, [syncCartItems])
 
     useEffect(() => {
         syncCartItems()
@@ -80,19 +88,25 @@ const ShoppingCartPage = () => {
                     <p>Finalizar pedido</p>
                 </button>
                 <div className="flex-1 w-full overflow-y-auto pb-20">
-                    {cartItems.map((element) => (
-                        <ProductShoppingCartCard
-                            key={element.id}
-                            id={element.id}
-                            productName={element.name}
-                            price={`R$ ${element.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                            imageUrl={element.url}
-                            imageAlt={element.alt}
-                            number={element.number}
-                            onIncrease={handleIncreaseProduct}
-                            onDecrease={handleDecreaseProduct}
-                        />
-                    ))}
+                    {loading ? (
+                        <p className="text-center text-sm text-gray mt-6">Carregando itens...</p>
+                    ) : cartItems.length === 0 ? (
+                        <p className="text-center text-sm text-gray mt-6">Seu carrinho está vazio.</p>
+                    ) : (
+                        cartItems.map((element) => (
+                            <ProductShoppingCartCard
+                                key={element.id}
+                                id={element.id}
+                                productName={element.name}
+                                price={`R$ ${element.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                                imageUrl={null}
+                                imageAlt={element.name}
+                                number={element.number}
+                                onIncrease={handleIncreaseProduct}
+                                onDecrease={handleDecreaseProduct}
+                            />
+                        ))
+                    )}
                 </div>
             </div>
             <NavBar/>

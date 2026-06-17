@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { LuCirclePlus, LuCircleMinus } from "react-icons/lu"
-import { getOrder } from "../../services/api/orders"
 
 const STATUS_LABELS = {
   processando: "Processando",
@@ -22,26 +21,9 @@ const STATUS_COLORS = {
 
 const OrderBlock = ({ order }) => {
   const [expanded, setExpanded] = useState(false)
-  const [detail, setDetail] = useState(null)
-  const [loadingDetail, setLoadingDetail] = useState(false)
-  const [detailError, setDetailError] = useState(false)
 
-  const handleToggle = async () => {
-    const next = !expanded
-    setExpanded(next)
-    if (!next) setDetailError(false)
-    if (next && !detail) {
-      setLoadingDetail(true)
-      try {
-        const completeOrder = await getOrder(order.id)
-        setDetail(completeOrder)
-      } catch {
-        setDetailError(true)
-      } finally {
-        setLoadingDetail(false)
-      }
-    }
-  }
+  const items = order._items ?? []
+  const total = order._total
 
   const label = STATUS_LABELS[order.stat] ?? order.stat
   const colorClass = STATUS_COLORS[order.stat] ?? "bg-gray"
@@ -69,7 +51,7 @@ const OrderBlock = ({ order }) => {
           type="button"
           title={expanded ? "Ver menos" : "Ver mais"}
           aria-label={expanded ? "Ver menos" : "Ver mais"}
-          onClick={handleToggle}
+          onClick={() => setExpanded((prev) => !prev)}
         >
           <div className={`transition-transform duration-300 ${expanded ? "rotate-180" : "rotate-90"}`}>
             {expanded ? (
@@ -82,30 +64,20 @@ const OrderBlock = ({ order }) => {
       </div>
 
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${expanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}`}>
-        {loadingDetail && (
-          <p className="py-4 text-sm text-gray text-center">Carregando itens...</p>
-        )}
-        {!loadingDetail && detailError && (
-          <p className="py-4 text-sm text-red text-center">Erro ao carregar itens. Tente novamente.</p>
-        )}
-        {!loadingDetail && detail && (
-          <>
-            {detail.items.map((item) => (
-              <div key={item.id} className="flex flex-row items-center justify-between gap-3 py-3 border-b border-gray/10 last:border-0">
-                <div className="flex flex-col">
-                  <p className="font-bold text-deep-blue">Produto #{item.id_product}</p>
-                  <p className="text-sm text-gray">Qtd: {item.quantity}</p>
-                </div>
-                <p className="font-bold">{formatCurrency(parseFloat(item.unit_price) * item.quantity)}</p>
-              </div>
-            ))}
-          </>
-        )}
+        {items.map((item) => (
+          <div key={item.id} className="flex flex-row items-center justify-between gap-3 py-3 border-b border-gray/10 last:border-0">
+            <div className="flex flex-col">
+              <p className="font-bold text-deep-blue">Produto #{item.id_product}</p>
+              <p className="text-sm text-gray">Qtd: {item.quantity}</p>
+            </div>
+            <p className="font-bold">{formatCurrency(parseFloat(item.unit_price) * item.quantity)}</p>
+          </div>
+        ))}
       </div>
 
       <div className="pt-2">
-        {detail ? (
-          <p className="font-bold text-right ml-auto">Total: {formatCurrency(detail.total)}</p>
+        {total != null ? (
+          <p className="font-bold text-right ml-auto">Total: {formatCurrency(total)}</p>
         ) : (
           <p className="text-sm text-gray text-right">Expanda para ver o total</p>
         )}

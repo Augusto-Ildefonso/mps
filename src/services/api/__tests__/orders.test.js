@@ -65,14 +65,17 @@ describe('createOrder', () => {
 })
 
 describe('listOrders', () => {
-  it('returns orders array', async () => {
+  it('normalizes CompleteOrder[] to flat shape with _items and _total', async () => {
+    const apiCompleteOrder = { order: mockOrder, items: mockCompleteOrder.items, total: mockCompleteOrder.total }
     mock
       .onGet('/api/pedidos')
-      .reply(200, { status: 'ok', data: { orders: [mockOrder] }, message: null })
+      .reply(200, { status: 'ok', data: { orders: [apiCompleteOrder] }, message: null })
 
     const result = await listOrders()
     expect(result).toHaveLength(1)
     expect(result[0].stat).toBe('processando')
+    expect(result[0]._items).toHaveLength(1)
+    expect(result[0]._total).toBe(135.8)
   })
 })
 
@@ -106,6 +109,43 @@ describe('updateOrderStatus', () => {
     const result = await updateOrderStatus(42, 'confirmado')
     expect(result.stat).toBe('confirmado')
     expect(JSON.parse(mock.history.patch[0].data).status).toBe('confirmado')
+  })
+})
+
+describe('updateOrderItems', () => {
+  it('patches items and returns updated CompleteOrder', async () => {
+    const updatedComplete = { order: { ...mockOrder, updated_at: '2026-06-15T10:00:00Z' }, items: mockCompleteOrder.items, total: mockCompleteOrder.total }
+    mock
+      .onPatch('/api/pedidos/42/items')
+      .reply(200, { status: 'ok', data: { order: updatedComplete }, message: null })
+
+    const payload = { add: [{ id_product: 110, quantity: 1 }] }
+    const result = await updateOrderItems(42, payload)
+    expect(result.order.id).toBe(42)
+    expect(result.items).toHaveLength(1)
+    expect(JSON.parse(mock.history.patch[0].data)).toMatchObject(payload)
+  })
+
+  it('throws 422 when order status prevents item modification', async () => {
+    mock.onPatch('/api/pedidos/42/items').reply(422, {
+      status: 'error',
+      message: "Items can only be modified when order status is 'processando'",
+    })
+
+    await expect(updateOrderItems(42, {})).rejects.toMatchObject({
+      status: 422,
+    })
+  })
+
+  it('throws 404 when item not found', async () => {
+    mock.onPatch('/api/pedidos/42/items').reply(404, {
+      status: 'error',
+      message: 'OrderItem with ID 43 not found',
+    })
+
+    await expect(updateOrderItems(42, { update: [{ id: 43, quantity: 5 }] })).rejects.toMatchObject({
+      status: 404,
+    })
   })
 })
 

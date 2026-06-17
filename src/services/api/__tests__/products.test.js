@@ -117,7 +117,7 @@ describe('updateProduct', () => {
   it('patches the product and returns the updated product', async () => {
     mock
       .onPatch('/api/products/108')
-      .reply(200, { status: 'ok', data: { product: { ...mockProduct, Descricao: 'Updated' } }, message: null })
+      .reply(200, { status: 'success', data: { product: { ...mockProduct, Descricao: 'Updated' } }, message: null })
 
     const result = await updateProduct(108, { nome: 'Updated' })
     expect(result.Descricao).toBe('Updated')
