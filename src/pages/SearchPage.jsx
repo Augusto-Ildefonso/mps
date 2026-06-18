@@ -1,67 +1,68 @@
-import { useRef} from "react"
+import { useState } from "react"
 import NavBar from "../component/NavBar/NavBar"
 import ProductSearchCard from "../component/ProductSearchCard/ProductSearchCard"
 import SearchBar from "../component/SearchBar/SearchBar"
-import {mockReq} from "../mock"
 import Header from "../component/Header/Header"
 import BannerNav from "../component/NavBar/BannerNav"
+import { searchProducts } from "../services/api/products"
 
 const SearchPage = () => {
-    const lastScrollTopRef = useRef(0)
-    const SCROLL_THRESHOLD = 12
+    const [results, setResults] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [hasSearched, setHasSearched] = useState(false)
 
-    const handleListScroll = (e) => {
-        const { scrollTop, scrollHeight, clientHeight } = e.currentTarget
-        const currentScrollTop = Math.max(0, scrollTop)
-        const maxScrollTop = Math.max(0, scrollHeight - clientHeight)
-        const isAtTop = currentScrollTop <= 0
-        const isAtBottom = currentScrollTop >= maxScrollTop - 1
-        const delta = currentScrollTop - lastScrollTopRef.current
-
-        if (isAtTop) {
-            setIsNavVisible(true)
-            lastScrollTopRef.current = currentScrollTop
-            return
+    const handleSearch = async (query) => {
+        if (!query) return
+        setLoading(true)
+        setError(null)
+        setHasSearched(true)
+        try {
+            const products = await searchProducts(query)
+            setResults(products)
+        } catch (err) {
+            setError(err.message ?? "Erro ao buscar produtos.")
+            setResults([])
+        } finally {
+            setLoading(false)
         }
-
-        if (isAtBottom) {
-            setIsNavVisible(false)
-            lastScrollTopRef.current = currentScrollTop
-            return
-        }
-
-        if (delta > SCROLL_THRESHOLD) {
-            setIsNavVisible(false)
-        } else if (delta < -SCROLL_THRESHOLD) {
-            setIsNavVisible(true)
-        }
-
-        lastScrollTopRef.current = currentScrollTop
     }
 
-    return(
+    return (
         <>
             <div className="p-5 h-[100dvh] flex flex-col overflow-hidden w-full">
                 <Header />
                 <BannerNav />
-                <SearchBar/>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2 w-full mt-4 flex-1 overflow-y-auto pb-20" onScroll={handleListScroll}>
-                    {
-                        mockReq.map(element => (
-                            <ProductSearchCard
-                                key={element.id}
-                                id={element.id}
-                                productName={element.name}
-                                price={`R$ ${element.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                                imageUrl={element.url}
-                                imageAlt={element.alt}
-                            />
-                        ))
-                    }
-                </div>
+                <SearchBar onSearch={handleSearch} />
 
+                {loading && (
+                    <p className="mt-6 text-center text-sm text-gray">Buscando...</p>
+                )}
+
+                {error && (
+                    <p className="mt-6 text-center text-sm text-red">{error}</p>
+                )}
+
+                {!loading && hasSearched && results.length === 0 && !error && (
+                    <p className="mt-6 text-center text-sm text-gray">Nenhum produto encontrado.</p>
+                )}
+
+                {!loading && results.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2 w-full mt-4 flex-1 overflow-y-auto pb-20">
+                        {results.map((product) => (
+                            <ProductSearchCard
+                                key={product.Idproduto}
+                                id={product.Idproduto}
+                                productName={product.Descricao}
+                                price={`R$ ${parseFloat(product.VLR_VENDA1).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                                imageUrl={null}
+                                imageAlt={product.Descricao}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
-            <NavBar/>
+            <NavBar />
         </>
     )
 }
