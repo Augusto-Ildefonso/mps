@@ -11,6 +11,20 @@ export function getProductImageUrl(path) {
 }
 
 /**
+ * List all products with optional pagination.
+ * @param {number} [limit] - max results
+ * @param {number} [offset] - number of results to skip
+ * @returns {Promise<Product[]>}
+ */
+export async function listProducts(limit, offset) {
+  const params = {}
+  if (limit != null) params.limit = limit
+  if (offset != null) params.offset = offset
+  const response = await produtosClient.get('/api/products', { params })
+  return response.data.data.products
+}
+
+/**
  * Fuzzy search products by name/brand.
  * @param {string} q - search query
  * @param {number} [limit] - max results

@@ -7,6 +7,8 @@ import Step1Personal from "./register/Step1Personal"
 import Step2Address from "./register/Step2Address"
 import Step3Company from "./register/Step3Company"
 import Step4Credentials from "./register/Step4Credentials"
+import { createUser } from "../services/api/users"
+import { useAuth } from "../context/AuthContext"
 
 const steps = [
     { key: 1, label: "Pessoais" },
@@ -40,14 +42,33 @@ const initialFormData = {
 
 const RegisterPage = () => {
     const navigate = useNavigate()
+    const { login } = useAuth()
     const [step, setStep] = useState(1)
     const [formData, setFormData] = useState(initialFormData)
     const [errors, setErrors] = useState({})
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [statusMessage, setStatusMessage] = useState("")
+    const [registering, setRegistering] = useState(false)
 
     const progress = ((step - 1) / (steps.length - 1)) * 100
+
+    function formatDocument(value, documentType) {
+        const digits = value.replace(/\D/g, "")
+        if (documentType === "cnpj") {
+            return digits
+                .replace(/^(\d{2})(\d)/, "$1.$2")
+                .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+                .replace(/\.(\d{3})(\d)/, ".$1/$2")
+                .replace(/(\d{4})(\d)/, "$1-$2")
+                .slice(0, 18)
+        }
+        return digits
+            .replace(/^(\d{3})(\d)/, "$1.$2")
+            .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+            .replace(/\.(\d{3})(\d)/, ".$1-$2")
+            .slice(0, 14)
+    }
 
     const handleChange = (event) => {
         const { name, type, checked, value } = event.target
@@ -56,7 +77,7 @@ const RegisterPage = () => {
         setStatusMessage("")
         setFormData((previousData) => ({
             ...previousData,
-            [name]: nextValue,
+            [name]: name === "documentNumber" ? formatDocument(nextValue, previousData.documentType) : nextValue,
         }))
     }
 
@@ -130,7 +151,7 @@ const RegisterPage = () => {
         setStep((previousStep) => Math.max(previousStep - 1, 1))
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
         const nextErrors = validateStep(step)
@@ -139,44 +160,24 @@ const RegisterPage = () => {
             return
         }
 
-        const payload = {
-            personalData: {
-                fullName: formData.fullName.trim(),
-                email: formData.email.trim(),
-                age: Number(formData.age),
-            },
-            document: {
-                type: formData.documentType,
-                number: formData.documentNumber.replace(/\D/g, ""),
-            },
-            address: {
-                cep: formData.cep.replace(/\D/g, ""),
-                street: formData.street.trim(),
-                number: formData.number.trim(),
-                neighborhood: formData.neighborhood.trim(),
-                city: formData.city.trim(),
-                state: formData.state,
-                complement: formData.complement.trim(),
-            },
-            company: formData.documentType === "cnpj"
-                ? {
-                    companyName: formData.companyName.trim(),
-                    fantasyName: formData.fantasyName.trim(),
-                    stateRegistration: formData.stateRegistration.trim(),
-                    businessArea: formData.businessArea.trim(),
-                }
-                : null,
-            credentials: {
-                password: formData.password,
-            },
-            preferences: {
-                orderNotifications: formData.orderNotifications,
-                marketingEmails: formData.marketingEmails,
-            },
-        }
+        setRegistering(true)
+        setStatusMessage("")
 
-        console.log("Register payload:", payload)
-        navigate("/")
+        try {
+            await createUser({
+                cpf: formData.documentNumber.replace(/\D/g, ""),
+                name: formData.fullName.trim(),
+                email: formData.email.trim(),
+                password: formData.password,
+            })
+            await login(formData.email.trim(), formData.password)
+            navigate("/")
+        } catch (err) {
+            const message = err.response?.data?.message || "Erro ao criar conta. Tente novamente."
+            setStatusMessage(message)
+        } finally {
+            setRegistering(false)
+        }
     }
 
     const renderStepContent = () => {
@@ -280,7 +281,7 @@ const RegisterPage = () => {
                                 </button>
                             ) : (
                                 <div className="w-full h-full flex-1">
-                                    <Button type="submit" bg_color="bg-orange" text="Criar conta" />
+                                    <Button type="submit" bg_color="bg-orange" text={registering ? "Criando..." : "Criar conta"} disabled={registering || !formData.termsAccepted} />
                                 </div>
                             )}
                         </div>

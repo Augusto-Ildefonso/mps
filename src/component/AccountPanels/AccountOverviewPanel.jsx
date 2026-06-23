@@ -1,9 +1,24 @@
+import { useEffect, useState } from "react"
 import { LuPackage, LuMapPin, LuCreditCard } from "react-icons/lu"
+import { listOrders } from "../../services/api/orders"
+import { listAddresses } from "../../services/api/users"
 
 const AccountOverviewPanel = ({ userName, userEmail, userAvatar }) => {
+    const [ordersCount, setOrdersCount] = useState(null)
+    const [addressesCount, setAddressesCount] = useState(null)
+
+    useEffect(() => {
+        listOrders()
+            .then((data) => setOrdersCount(data?.orders?.length ?? data?.length ?? 0))
+            .catch(() => setOrdersCount(0))
+        listAddresses()
+            .then((data) => setAddressesCount(data?.length ?? 0))
+            .catch(() => setAddressesCount(0))
+    }, [])
+
     const stats = [
-        { icon: LuPackage, label: "Pedidos Recentes", value: "4", color: "bg-blue" },
-        { icon: LuMapPin, label: "Endereços Salvos", value: "2", color: "bg-green" },
+        { icon: LuPackage, label: "Pedidos Recentes", value: ordersCount ?? "...", color: "bg-blue" },
+        { icon: LuMapPin, label: "Endereços Salvos", value: addressesCount ?? "...", color: "bg-green" },
         { icon: LuCreditCard, label: "Formas de Pagamento", value: "0", color: "bg-orange" },
     ]
 
@@ -13,7 +28,6 @@ const AccountOverviewPanel = ({ userName, userEmail, userAvatar }) => {
                 <p className="text-gray-300 text-sm">Gerencie sua conta, acompanhe seus pedidos e muito mais.</p>
             </div>
 
-            {/* Estatísticas rápidas */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {stats.map((stat, index) => {
                     const Icon = stat.icon
@@ -33,8 +47,6 @@ const AccountOverviewPanel = ({ userName, userEmail, userAvatar }) => {
                 })}
             </div>
 
-            {/* Atividade Recente */}
-            {/* TODO: Conectar ao backend para mostrar atividades reais */}
             <div className="bg-full-white rounded-xl p-6 shadow-sm">
                 <h3 className="font-bold text-lg text-deep-blue mb-3">Atividade Recente</h3>
                 <div className="flex flex-col items-center justify-center py-8 text-gray">

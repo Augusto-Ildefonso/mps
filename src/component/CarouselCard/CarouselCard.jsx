@@ -12,7 +12,7 @@ const CarouselCard = (props) => {
 
             </div>
             <div className="w-1/2 h-full flex items-center justify-end">
-                <img src={props.img} alt={props.alt} className="h-full w-full sm:object-cover object-right object-fill"/>
+                <img src={props.img} alt={props.alt} className="h-full w-full object-contain object-right"/>
             </div>
             
         </div>

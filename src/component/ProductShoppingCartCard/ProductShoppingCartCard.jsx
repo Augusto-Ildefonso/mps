@@ -5,7 +5,11 @@ const ProductShoppingCartCard = (props) => {
         >
             <div className="flex flex-row w-full mt-5">
                 <div className="w-2/5 flex justify-center items-center">
-                    <img src={props.imageUrl} alt={props.imageAlt} className="w-auto object-contain"/>
+                    {props.imageUrl ? (
+                        <img src={props.imageUrl} alt={props.imageAlt} className="w-full max-h-20 object-contain"/>
+                    ) : (
+                        <div className="w-full h-20 flex items-center justify-center text-gray text-xs">Sem imagem</div>
+                    )}
                 </div>
 
                 <div className="w-3/5 ml-5">

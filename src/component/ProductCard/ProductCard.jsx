@@ -25,7 +25,13 @@ const ProductCard = (props) => {
         <div className="flex flex-col w-full h-auto shadow-xl rounded-xl p-2 sm:p-3 gap-y-1"
         >
             <div className="w-full flex-1 flex justify-center items-center"  onClick={() => handleCardClick(props.id)}>
-                <img src={props.productImage} alt={props.imageAlt} className="w-full max-w-[150px] sm:max-w-[180px] h-auto object-contain"/>
+                {props.productImage ? (
+                    <img src={props.productImage} alt={props.imageAlt} className="w-full max-w-[150px] sm:max-w-[180px] h-auto object-contain"/>
+                ) : (
+                    <div className="w-full max-w-[150px] sm:max-w-[180px] h-24 flex items-center justify-center text-gray text-xs">
+                        Sem imagem
+                    </div>
+                )}
             </div>
             <p className="font-extrabold text-base sm:text-lg text-deep-blue truncate"  onClick={() => handleCardClick(props.id)}>{props.productName}</p>
             <div className="flex flex-row justify-between items-center">

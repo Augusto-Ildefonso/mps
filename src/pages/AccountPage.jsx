@@ -13,25 +13,25 @@ import {
     AccountNotificationsPanel,
     AccountHelpPanel
 } from "../component/AccountPanels"
-
-const mockUser = {
-    name: "Marco Silva",
-    email: "marco.silva@email.com",
-    avatar: null
-}
+import { useAuth } from "../context/AuthContext"
 
 const AccountPage = () => {
     const navigate = useNavigate()
+    const { user, logout } = useAuth()
     const [activeSection, setActiveSection] = useState("visao-geral")
 
+    const userName = user?.name ?? "Usuário"
+    const userEmail = user?.email ?? ""
+
     const handleLogout = () => {
+        logout()
         navigate("/login")
     }
 
     const renderPanel = () => {
         switch (activeSection) {
             case "visao-geral":
-                return <AccountOverviewPanel userName={mockUser.name} userEmail={mockUser.email} userAvatar={mockUser.avatar} />
+                return <AccountOverviewPanel userName={userName} userEmail={userEmail} />
             case "pedidos":
                 return <AccountOrdersPanel />
             case "enderecos":
@@ -45,7 +45,7 @@ const AccountPage = () => {
             case "ajuda":
                 return <AccountHelpPanel />
             default:
-                return <AccountOverviewPanel userName={mockUser.name} userEmail={mockUser.email} userAvatar={mockUser.avatar} />
+                return <AccountOverviewPanel userName={userName} userEmail={userEmail} />
         }
     }
 
@@ -61,30 +61,22 @@ const AccountPage = () => {
                         {/* Perfil - Visivel apenas no Mobile */}
                         <div className="md:hidden flex flex-row items-center gap-4 bg-full-white rounded-xl p-4 mb-4">
                             <div className="flex justify-center items-center w-16 h-16 rounded-full bg-dark-blue text-full-white text-3xl font-bold">
-                                {mockUser.avatar ? (
-                                    <img src={mockUser.avatar} alt="User Avatar" className="w-full h-full rounded-full object-cover" />
-                                ) : (
-                                    <span>{mockUser.name.charAt(0).toUpperCase()}</span>
-                                )}
+                                <span>{userName.charAt(0).toUpperCase()}</span>
                             </div>
                             <div className="flex flex-col">
-                                <h1 className="font-extrabold text-xl text-deep-blue">{mockUser.name}</h1>
-                                <p className="text-sm text-gray">{mockUser.email}</p>
+                                <h1 className="font-extrabold text-xl text-deep-blue">{userName}</h1>
+                                <p className="text-sm text-gray">{userEmail}</p>
                             </div>
                         </div>
 
                         {/* Perfil - Visivel apenas no Desktop */}
                         <div className="hidden md:flex flex-col items-center gap-3 bg-full-white rounded-xl p-6 mb-4">
                             <div className="flex justify-center items-center w-20 h-20 rounded-full bg-dark-blue text-full-white text-4xl font-bold">
-                                {mockUser.avatar ? (
-                                    <img src={mockUser.avatar} alt="User Avatar" className="w-full h-full rounded-full object-cover" />
-                                ) : (
-                                    <span>{mockUser.name.charAt(0).toUpperCase()}</span>
-                                )}
+                                <span>{userName.charAt(0).toUpperCase()}</span>
                             </div>
                             <div className="flex flex-col items-center">
-                                <h1 className="font-extrabold text-lg text-deep-blue">{mockUser.name}</h1>
-                                <p className="text-sm text-gray">{mockUser.email}</p>
+                                <h1 className="font-extrabold text-lg text-deep-blue">{userName}</h1>
+                                <p className="text-sm text-gray">{userEmail}</p>
                             </div>
                         </div>
 

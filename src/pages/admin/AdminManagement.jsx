@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import AdminLayout from "../../component/admin/AdminLayout"
 import AdminPageHeader from "../../component/admin/AdminPageHeader"
+import AdminInput from "../../component/admin/forms/AdminInput"
 import AdminSelect from "../../component/admin/forms/AdminSelect"
 import GeneralTaxonomyPanel from "../../component/admin/management/GeneralTaxonomyPanel"
 import ManagementTabs from "../../component/admin/management/ManagementTabs"
@@ -16,6 +17,8 @@ import {
 import {
     createProduct,
     deleteProduct,
+    listProductImages,
+    listProducts,
     searchProducts,
     updateProduct,
     uploadProductImage,
@@ -43,13 +46,24 @@ const AdminManagement = () => {
     const [selectedEditCar, setSelectedEditCar] = useState("")
     const [newCategoryDraft, setNewCategoryDraft] = useState("")
     const [newCarDraft, setNewCarDraft] = useState("")
+    const [productSearchQuery, setProductSearchQuery] = useState("")
 
     const loadProducts = useCallback(async () => {
         setLoadingProducts(true)
         setApiError(null)
         try {
-            const data = await searchProducts("")
-            setProducts(data)
+            const data = await listProducts(9999)
+            const withImages = await Promise.allSettled(
+                data.map(async (p) => {
+                    try {
+                        const images = await listProductImages(p.Idproduto)
+                        return { ...p, _images: images }
+                    } catch {
+                        return { ...p, _images: [] }
+                    }
+                })
+            )
+            setProducts(withImages.map((r) => (r.status === "fulfilled" ? r.value : null)).filter(Boolean))
         } catch (err) {
             setApiError(err.message ?? "Erro ao carregar produtos.")
         } finally {
@@ -171,25 +185,43 @@ const AdminManagement = () => {
         setActiveTab("edit")
     }
 
+    const filteredProducts = useMemo(() => {
+        const q = productSearchQuery.trim().toLowerCase()
+        if (!q) return products
+        return products.filter(
+            (p) =>
+                p.Descricao.toLowerCase().includes(q) ||
+                p.Marca?.toLowerCase().includes(q)
+        )
+    }, [products, productSearchQuery])
+
     const editSelector = (
-        <AdminSelect
-            value={selectedProductId ?? ""}
-            onChange={(event) => {
-                const p = products.find((p) => p.Idproduto === Number(event.target.value)) ?? null
-                updateSelectedProductForm(p)
-            }}
-            disabled={products.length === 0}
-        >
-            {products.length === 0 ? (
-                <option value="">Sem produtos cadastrados</option>
-            ) : (
-                products.map((product) => (
-                    <option key={product.Idproduto} value={product.Idproduto}>
-                        {product.Descricao} — {product.Marca}
-                    </option>
-                ))
-            )}
-        </AdminSelect>
+        <div className="space-y-2">
+            <AdminInput
+                type="text"
+                value={productSearchQuery}
+                onChange={(event) => setProductSearchQuery(event.target.value)}
+                placeholder="Buscar produto por nome ou marca..."
+            />
+            <AdminSelect
+                value={selectedProductId ?? ""}
+                onChange={(event) => {
+                    const p = products.find((p) => p.Idproduto === Number(event.target.value)) ?? null
+                    updateSelectedProductForm(p)
+                }}
+                disabled={products.length === 0}
+            >
+                {filteredProducts.length === 0 ? (
+                    <option value="">Nenhum produto encontrado</option>
+                ) : (
+                    filteredProducts.map((product) => (
+                        <option key={product.Idproduto} value={product.Idproduto}>
+                            {product.Descricao} — {product.Marca}
+                        </option>
+                    ))
+                )}
+            </AdminSelect>
+        </div>
     )
 
     return (

@@ -5,6 +5,7 @@ import SearchBar from "../component/SearchBar/SearchBar"
 import Header from "../component/Header/Header"
 import BannerNav from "../component/NavBar/BannerNav"
 import { searchProducts } from "../services/api/products"
+import { getRandomMockImage } from "../services/mockImages"
 
 const SearchPage = () => {
     const [results, setResults] = useState([])
@@ -30,8 +31,8 @@ const SearchPage = () => {
 
     return (
         <>
-            <div className="p-5 h-[100dvh] flex flex-col overflow-hidden w-full">
-                <Header />
+            <div className="h-[100dvh] flex flex-col overflow-hidden w-full">
+                <Header showBackButton={false} />
                 <BannerNav />
                 <SearchBar onSearch={handleSearch} />
 
@@ -55,7 +56,7 @@ const SearchPage = () => {
                                 id={product.Idproduto}
                                 productName={product.Descricao}
                                 price={`R$ ${parseFloat(product.VLR_VENDA1).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                                imageUrl={null}
+                                imageUrl={getRandomMockImage()}
                                 imageAlt={product.Descricao}
                             />
                         ))}

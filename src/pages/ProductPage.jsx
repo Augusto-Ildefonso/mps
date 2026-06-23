@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { LuArrowLeft, LuShoppingCart } from "react-icons/lu"
 import { useNavigate, useParams } from "react-router-dom"
 import CardButton from "../component/CardButton/CardButton"
@@ -6,6 +6,7 @@ import logo from "../assets/logo.jpeg"
 import BannerNav from "../component/NavBar/BannerNav"
 import Navbar from "../component/NavBar/NavBar"
 import { getProduct, listProductImages, getProductImageUrl } from "../services/api/products"
+import { getRandomMockImage } from "../services/mockImages"
 
 const ProductPage = () => {
     const { id } = useParams()
@@ -37,8 +38,9 @@ const ProductPage = () => {
 
     const handleBack = () => navigate(-1)
 
+    const mockImage = useMemo(() => getRandomMockImage(), [id])
     const primaryImageUrl =
-        images.length > 0 ? getProductImageUrl(images[0].path) : null
+        images.length > 0 ? getProductImageUrl(images[0].path) : mockImage
 
     return (
         <div className="flex flex-col justify-center">

@@ -1,126 +1,106 @@
-import TextField from "../../component/auth/TextField";
-import DropDown from "../../component/Forms/Dropdown";
-import Header from "../../component/Header/Header";
-import { useState } from "react";
-import Button from "../../component/GeneralButton/Button";
+import { useState } from "react"
+import TextField from "../../component/auth/TextField"
+import DropDown from "../../component/Forms/Dropdown"
+import Header from "../../component/Header/Header"
+import Button from "../../component/GeneralButton/Button"
+import { addAddress } from "../../services/api/users"
+import { useNavigate } from "react-router-dom"
+
 const AddressPage = ({ title }) => {
+    const navigate = useNavigate()
     const Estados = [
         "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
         "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE",
         "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP",
         "SE", "TO"
-    ];
-    const [identificacao, setIdentificacao] = useState("");
-    const [destinatario, setDestinatario] = useState("");
-    const [cep, setCep] = useState("");
-    const [rua, setRua] = useState("");
-    const [numero, setNumero] = useState("");
-    const [cidade, setCidade] = useState("");
-    const [estado, setEstado] = useState("");
-    const [complemento, setComplemento] = useState("");
-    const [identificacaoError, setIdentificacaoError] = useState(null);
-    const [cepError, setCepError] = useState(null);
-    const [ruaError, setRuaError] = useState(null);
-    const [cidadeError, setCidadeError] = useState(null);
-    const [estadoError, setEstadoError] = useState(null);
-    const validateIdentificacao = (value) => {
-        if (value.trim() === "") {
-            return "A identificação é obrigatória.";
-        }
-        return "";
-    };
+    ]
+    const [identificacao, setIdentificacao] = useState("")
+    const [destinatario, setDestinatario] = useState("")
+    const [cep, setCep] = useState("")
+    const [rua, setRua] = useState("")
+    const [numero, setNumero] = useState("")
+    const [bairro, setBairro] = useState("")
+    const [cidade, setCidade] = useState("")
+    const [estado, setEstado] = useState("")
+    const [complemento, setComplemento] = useState("")
+    const [errors, setErrors] = useState({})
+    const [submitting, setSubmitting] = useState(false)
+    const [submitError, setSubmitError] = useState("")
 
-    const validateCep = (value) => {
-        const cepRegex = /^\d{5}-\d{3}$/;
-        if (!cepRegex.test(value)) {
-            return "O CEP deve estar no formato 12345-678.";
-        }
-        return "";
-    };
-
-    const validateRua = (value) => {
-        if (value.trim() === "") {
-            return "A rua é obrigatória.";
-        }
-        return "";
-    };
-
-    const validateCidade = (value) => {
-        if (value.trim() === "") {
-            return "A cidade é obrigatória.";
-        }
-        const cidadeRegex = /^[a-zA-Z\s]+$/;
-        if (!cidadeRegex.test(value)) {
-            return "A cidade deve conter apenas letras e espaços.";
-        }
-        return "";
-    };
-
-    const validateEstado = (value) => {
-        if (value.trim() === "") {
-            return "O estado é obrigatório.";
-        }
-        return "";
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const identificacaoError = validateIdentificacao(identificacao);
-        const cepError = validateCep(cep);
-        const ruaError = validateRua(rua);
-        const cidadeError = validateCidade(cidade);
-        const estadoError = validateEstado(estado);
-
-        setIdentificacaoError(identificacaoError);
-        setCepError(cepError);
-        setRuaError(ruaError);
-        setCidadeError(cidadeError);
-        setEstadoError(estadoError);
-
-        if (identificacaoError || cepError || ruaError || cidadeError || estadoError) {
-            return;
-        }
-        alert("Endereço salvo com sucesso!");
+    const validate = () => {
+        const next = {}
+        if (!identificacao.trim()) next.identificacao = "A identificação é obrigatória."
+        if (!cep.trim()) next.cep = "O CEP é obrigatório."
+        if (!rua.trim()) next.rua = "A rua é obrigatória."
+        if (!cidade.trim()) next.cidade = "A cidade é obrigatória."
+        if (!estado.trim()) next.estado = "O estado é obrigatório."
+        setErrors(next)
+        return Object.keys(next).length === 0
     }
 
     const handleCepChange = (e) => {
-        const value = e.target.value;
-        const formattedValue = value.replace(/\D/g, '').replace(/(\d{5})(\d{3})/, '$1-$2');
-        setCep(formattedValue);
-        if (cepError) setCepError(validateCep(formattedValue));
-    };
+        const value = e.target.value
+        const formattedValue = value.replace(/\D/g, '').replace(/(\d{5})(\d{3})/, '$1-$2')
+        setCep(formattedValue)
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (!validate()) return
+
+        setSubmitting(true)
+        setSubmitError("")
+
+        try {
+            await addAddress({
+                name: identificacao.trim(),
+                cep: cep.replace(/\D/g, ""),
+                street: rua.trim(),
+                number: numero.trim(),
+                neighborhood: bairro.trim(),
+                city: cidade.trim(),
+                state: estado,
+                complement: complemento.trim(),
+            })
+            navigate("/account/addresses")
+        } catch (err) {
+            setSubmitError(err.response?.data?.message || "Erro ao salvar endereço.")
+        } finally {
+            setSubmitting(false)
+        }
+    }
 
     return (
         <div>
-            <Header showBackButton={true} />
+            <Header showBackButton={true} backTo="/account" />
             <h1 className="text-center font-bold text-deep-blue text-xl">{title}</h1>
             <form className="flex flex-col gap-4 p-4" onSubmit={handleSubmit}>
-                <TextField id="Identificação" name="Identificação" label="Identificação*" placeholder="Casa, Trabalho, etc." onBlur={() => setIdentificacaoError(validateIdentificacao(identificacao))} value={identificacao} onChange={(e) => { setIdentificacao(e.target.value); if (identificacaoError) setIdentificacaoError(validateIdentificacao(e.target.value)); }} />
-                {identificacaoError && <p className="text-red text-sm">{identificacaoError}</p>}
+                <TextField id="Identificação" name="Identificação" label="Identificação*" placeholder="Casa, Trabalho, etc." value={identificacao} onChange={(e) => setIdentificacao(e.target.value)} />
+                {errors.identificacao && <p className="text-red text-sm">{errors.identificacao}</p>}
                 <TextField id="Destinatário" name="Destinatário" label="Destinatário" placeholder="Nome do destinatário" value={destinatario} onChange={(e) => setDestinatario(e.target.value)} />
-                <TextField id="Cep" name="Cep" label="CEP*" placeholder="12345-678" onBlur={() => setCepError(validateCep(cep))} value={cep} onChange={handleCepChange} />
-                {cepError && <p className="text-red text-sm">{cepError}</p>}
-                <TextField id="Rua" name="Rua" label="Rua*" placeholder="Rua das Flores" onBlur={() => setRuaError(validateRua(rua))} value={rua} onChange={(e) => { setRua(e.target.value); if (ruaError) setRuaError(validateRua(e.target.value)); }} />
-                {ruaError && <p className="text-red text-sm">{ruaError}</p>}
+                <TextField id="Cep" name="Cep" label="CEP*" placeholder="12345-678" value={cep} onChange={handleCepChange} />
+                {errors.cep && <p className="text-red text-sm">{errors.cep}</p>}
+                <TextField id="Rua" name="Rua" label="Rua*" placeholder="Rua das Flores" value={rua} onChange={(e) => setRua(e.target.value)} />
+                {errors.rua && <p className="text-red text-sm">{errors.rua}</p>}
                 <TextField id="Número" name="Número" label="Número" placeholder="123" value={numero} onChange={(e) => setNumero(e.target.value)} />
+                <TextField id="Bairro" name="Bairro" label="Bairro" placeholder="Centro" value={bairro} onChange={(e) => setBairro(e.target.value)} />
                 <div className="flex gap-4">
-                    <div>
-                        <TextField id="Cidade" name="Cidade" label="Cidade*" placeholder="São Paulo" onBlur={() => setCidadeError(validateCidade(cidade))} value={cidade} onChange={(e) => { setCidade(e.target.value); if (cidadeError) setCidadeError(validateCidade(e.target.value)); }} />
-                        {cidadeError && <p className="text-red text-sm">{cidadeError}</p>}
+                    <div className="flex-1">
+                        <TextField id="Cidade" name="Cidade" label="Cidade*" placeholder="São Paulo" value={cidade} onChange={(e) => setCidade(e.target.value)} />
+                        {errors.cidade && <p className="text-red text-sm">{errors.cidade}</p>}
                     </div>
                     <div className="w-1/2">
-                        <label htmlFor="Estado" className="mb-1 block text-bg font-medium text-slate-700 ">
-                            Estado*
-                        </label>
-                        <DropDown options={Estados.map((estado) => ({ value: estado, label: estado }))} value={estado} onBlur={() => setEstadoError(validateEstado(estado))} onChange={(e) => { setEstado(e.target.value); if (estadoError) setEstadoError(validateEstado(e.target.value)); }} />
-                        {estadoError && <p className="text-red text-sm">{estadoError}</p>}
+                        <label htmlFor="Estado" className="mb-1 block text-bg font-medium text-slate-700 ">Estado*</label>
+                        <DropDown options={Estados.map((estado) => ({ value: estado, label: estado }))} value={estado} onChange={(e) => setEstado(e.target.value)} />
+                        {errors.estado && <p className="text-red text-sm">{errors.estado}</p>}
                     </div>
                 </div>
                 <TextField id="Complemento" name="Complemento" label="Complemento" placeholder="Apartamento, casa, etc." value={complemento} onChange={(e) => setComplemento(e.target.value)} />
-                <Button type="submit" bg_color="bg-orange" text="Salvar" />
+                {submitError && <p className="text-red text-sm">{submitError}</p>}
+                <Button type="submit" bg_color="bg-orange" text={submitting ? "Salvando..." : "Salvar"} disabled={submitting} />
             </form>
         </div>
     )
 }
 
-export default AddressPage;
+export default AddressPage

@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react"
-import { LuArrowLeft } from "react-icons/lu"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import Header from "../component/Header/Header"
 import NavBar from "../component/NavBar/NavBar"
 import ProductShoppingCartCard from "../component/ProductShoppingCartCard/ProductShoppingCartCard"
 import { cart } from "../services/Cart"
 import { getProduct } from "../services/api/products"
+import { getRandomMockImage } from "../services/mockImages"
 import BannerNav from "../component/NavBar/BannerNav"
 
 const ShoppingCartPage = () => {
@@ -25,6 +26,7 @@ const ShoppingCartPage = () => {
                             name: product.Descricao,
                             price: parseFloat(product.VLR_VENDA1),
                             number: cartItem.number,
+                            imageUrl: getRandomMockImage(),
                         }
                     } catch {
                         return null
@@ -60,28 +62,10 @@ const ShoppingCartPage = () => {
         syncCartItems()
     }
 
-    const handleGoBack = () => {
-        navigate(-1)
-    }
-
     return(
         <div className="h-[100dvh] flex flex-col overflow-hidden w-full">
             
-            <header className="grid grid-cols-3 items-center px-4 py-2 shadow shrink-0">
-                <button
-                    type="button"
-                    aria-label="Voltar"
-                    onClick={handleGoBack}
-                    className="hidden md:inline-flex justify-self-start items-center justify-center text-3xl text-deep-blue"
-                >
-                    <LuArrowLeft className="shrink-0 stroke-current active:text-light-blue transition duration-300 active:scale-95" />
-                </button>
-                <div className="justify-self-center flex justify-center items-center col-span-3 md:col-span-1">
-                    <h1 className="font-bold text-2xl">Carrinho</h1>
-                </div>
-
-                <span className="hidden md:block" aria-hidden="true" />
-            </header>
+            <Header showBackButton={false} />
              <BannerNav />
             <div className="flex flex-col items-center gap-5 flex-1 overflow-hidden px-4 pt-5">
                 <button className="w-1/3 p-2 bg-orange rounded-3xl active:scale-95 duration shrink-0" onClick={handleCheckout}>
@@ -99,7 +83,7 @@ const ShoppingCartPage = () => {
                                 id={element.id}
                                 productName={element.name}
                                 price={`R$ ${element.price.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-                                imageUrl={null}
+                                imageUrl={element.imageUrl}
                                 imageAlt={element.name}
                                 number={element.number}
                                 onIncrease={handleIncreaseProduct}

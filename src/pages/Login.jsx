@@ -7,19 +7,16 @@ import SignInButton from '../component/auth/SignInButton'
 import Link from '../component/auth/Link'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+
 const LoginPage = () => {
   const navigate = useNavigate()
-  const { setToken } = useAuth()
-  const handleNavigateToHome = () => {
-    // SWAP POINT: replace the line below with a real auth API call when ready
-    setToken(import.meta.env.VITE_DEV_JWT_TOKEN ?? '')
-    navigate('/')
-  }
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
-
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
   const handleChange = (event) => {
@@ -28,6 +25,23 @@ const LoginPage = () => {
       ...previousData,
       [name]: value,
     }))
+  }
+
+  const handleLogin = async () => {
+    if (!formData.email || !formData.password) {
+      setError('Preencha todos os campos.')
+      return
+    }
+    setLoading(true)
+    setError('')
+    try {
+      await login(formData.email, formData.password)
+      navigate('/')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Email ou senha inválidos.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -60,8 +74,10 @@ const LoginPage = () => {
               onToggleVisibility={() => setShowPassword((previous) => !previous)}
             />
 
+            {error && <p className="text-sm text-red">{error}</p>}
+
             <div>
-              <SignInButton text="Entrar" onClick={handleNavigateToHome} />
+              <SignInButton text={loading ? 'Entrando...' : 'Entrar'} onClick={handleLogin} disabled={loading} />
             </div>
 
             <div className="flex justify-end">

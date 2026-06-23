@@ -3,6 +3,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import MockAdapter from 'axios-mock-adapter'
 import { produtosClient } from '../axiosClients.js'
 import {
+  listProducts,
   searchProducts,
   getProduct,
   createProduct,
@@ -78,6 +79,37 @@ describe('searchProducts', () => {
       message: 'DB error',
       status: 500,
     })
+  })
+})
+
+describe('listProducts', () => {
+  it('returns products array from GET /api/products', async () => {
+    mock
+      .onGet('/api/products')
+      .reply(200, { status: 'ok', data: { products: [mockProduct] }, message: null })
+
+    const result = await listProducts()
+    expect(result).toHaveLength(1)
+    expect(result[0].Idproduto).toBe(108)
+  })
+
+  it('sends limit param when provided', async () => {
+    mock
+      .onGet('/api/products')
+      .reply(200, { status: 'ok', data: { products: [] }, message: null })
+
+    await listProducts(8)
+    expect(mock.history.get[0].params.limit).toBe(8)
+  })
+
+  it('sends offset param when provided', async () => {
+    mock
+      .onGet('/api/products')
+      .reply(200, { status: 'ok', data: { products: [] }, message: null })
+
+    await listProducts(8, 16)
+    expect(mock.history.get[0].params.limit).toBe(8)
+    expect(mock.history.get[0].params.offset).toBe(16)
   })
 })
 

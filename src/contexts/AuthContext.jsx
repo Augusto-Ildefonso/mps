@@ -20,10 +20,10 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     const response = await api.post('/auth/login', { email, password })
-    const { token: newToken, name, cpf } = response.data
-    localStorage.setItem('@mps/token', newToken)
+    const { token, name, cpf } = response.data
+    localStorage.setItem('@mps/token', token)
     localStorage.setItem('@mps/user', JSON.stringify({ name, email, cpf }))
-    setToken(newToken)
+    setToken(token)
     setUser({ name, email, cpf })
   }, [])
 

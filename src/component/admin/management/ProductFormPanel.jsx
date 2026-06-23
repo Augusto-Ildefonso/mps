@@ -142,7 +142,10 @@ const ProductFormPanel = ({
                         className="text-sm text-dark-gray file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:bg-light-gray file:text-deep-blue hover:file:bg-gray/20"
                     />
                     {imageFile && (
-                        <p className="text-xs text-gray">Selecionado: {imageFile.name}</p>
+                        <div className="mt-2 flex items-center gap-3">
+                            <img src={URL.createObjectURL(imageFile)} alt="Preview" className="h-16 w-16 rounded-md object-cover" />
+                            <p className="text-xs text-gray">{imageFile.name}</p>
+                        </div>
                     )}
                 </div>
 
